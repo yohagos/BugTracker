@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Index</title>
+    </head>
+
+    <body>
+    
+        <p>Enter a Message : </p>
+
+        <br>
+        <form method="post">
+            <textarea name="txtArea" id="tarea" cols="30" rows="10"></textarea>
+            <button type="submit" id="bttn"></button>
+        </form>
+
+        <br><br>
+        {{ if .Display }}
+            <p>Message Board :</p>
+            <ul>
+                {{ range .Messages }}
+                <li>
+                    <div>
+                        {{ . }}
+                    </div>
+                </li>
+                {{ end }}
+            </ul>
+        {{ end }}
+    </body>
+</html>
