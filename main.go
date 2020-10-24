@@ -15,15 +15,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-/*
-type person struct {
-	ID        primitive.ObjectID `bson:"_id"`
-	name      string             `bson:"name"`
-	city      string             `bson:"city"`
-	createdAt time.Time          `bson:"createdAt"`
-	updatedAt time.Time          `bson:"updatedAt"`
-} */
-
 type person struct {
 	ID        primitive.ObjectID `bson:"_id"`
 	name      string             `bson:"name"`
@@ -52,21 +43,19 @@ func main() {
 		createdAt: time.Now(),
 		updatedAt: time.Now(),
 	}
-	/* err := createDocument(yosef)
-	ifError(err) */
 
 	_, err := collection.InsertOne(ctx, bson.M{
 		"name": yosef.name,
 	})
 	ifError(err)
 
-	/* loadTemplate("static/*.html")
+	loadTemplate("static/*.html")
 
 	r := newRouter()
 	log.Println("Server starting..")
 	if err := http.ListenAndServe(":8888", r); err != nil {
 		log.Fatal("Server error! Message : ", err)
-	} */
+	}
 }
 
 func newRouter() *mux.Router {
