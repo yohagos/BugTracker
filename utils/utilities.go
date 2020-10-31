@@ -4,8 +4,9 @@ import (
 	"log"
 )
 
+// IsError func
 func IsError(err error) {
 	if err != nil {
-		log.Fatal("An Error accured : ", err)
+		log.Fatal("An Error occurred : ", err)
 	}
 }

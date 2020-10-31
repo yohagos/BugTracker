@@ -4,15 +4,15 @@ import (
 	"context"
 	"net/http"
 
-	utils "../utils"
-
+	"../models"
+	"../utils"
 	"github.com/gorilla/mux"
 )
 
 var ctx = context.TODO()
+var newuser *models.User
 
-var list []string
-
+// NewRouter func
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/", indexGETHandler).Methods("GET")
@@ -25,28 +25,28 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	var displayList bool
-	displayList = false
-	if len(list) > 0 {
-		displayList = true
-	}
-
+	/* var ok bool
+	ok = false
+	if len(newuser.GetUserName()) > 0 {
+		ok = true
+	} */
 	utils.ExecuteTemplate(w, "index.html", struct {
-		Display  bool
-		Messages []string
+		/* Display bool */
+		User *models.User
 	}{
-		Display:  displayList,
-		Messages: list,
+		/* Display: ok, */
+		User: newuser,
 	})
 }
 
 func indexPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	message := r.PostForm.Get("txtArea")
-	list = append(list, message)
-	http.Redirect(w, r, "/", 302)
-}
+	userName := r.PostForm.Get("name")
+	userLastname := r.PostForm.Get("lastname")
+	userEmail := r.PostForm.Get("email")
+	userPassword := r.PostForm.Get("password")
 
-func SetList(msgList []string) {
-	list = msgList
+	//models.users.SetA{userName, userLastname, userEmail, userPassword}
+	newuser = models.CreateNewUser(userName, userLastname, userEmail, userPassword)
+	http.Redirect(w, r, "/", 302)
 }

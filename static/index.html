@@ -7,26 +7,24 @@
 
     <body>
     
-        <p>Enter a Message : </p>
-
         <br>
         <form method="post">
-            <textarea name="txtArea" id="tarea" cols="30" rows="10"></textarea>
-            <button type="submit" id="bttn"></button>
+            <input id="userName" name="name" type="text" placeholder="Name"><br>
+            <input id="userLastname" name="lastname" type="text" placeholder="Lastname"><br>
+            <input id="userEmail" name="email" type="text" placeholder="Email"><br>
+            <input id="userPassword" name="password" type="text" placeholder="Password"><br>
+            <button type="submit">Send</button>
         </form>
-
         <br><br>
-        {{ if .Display }}
-            <p>Message Board :</p>
+        
+        <hr style="width: 100%;">
+            <h2>New User created : </h2>
             <ul>
-                {{ range .Messages }}
-                <li>
-                    <div>
-                        {{ . }}
-                    </div>
-                </li>
-                {{ end }}
+                <li>Name: {{.User.GetUserName}}</li>
+                <li>Lastname: {{.User.GetUserLastname}} </li>
+                <li>Email: {{.User.GetUserEmail}}</li>
+                <li>Password: {{.User.GetUserPassword}}</li>
             </ul>
-        {{ end }}
+        
     </body>
 </html>
