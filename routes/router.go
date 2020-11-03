@@ -2,8 +2,10 @@ package routes
 
 import (
 	"context"
+	"log"
 	"net/http"
 
+	"../database"
 	"../models"
 	"../utils"
 	"github.com/gorilla/mux"
@@ -25,17 +27,17 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	/* var ok bool
-	ok = false
-	if len(newuser.GetUserName()) > 0 {
-		ok = true
+	var display bool
+	display = false
+	/* if len(newuser.GetUserName()) > 0 {
+		display = true
 	} */
 	utils.ExecuteTemplate(w, "index.html", struct {
-		/* Display bool */
-		User *models.User
+		Display bool
+		User    *models.User
 	}{
-		/* Display: ok, */
-		User: newuser,
+		Display: display,
+		User:    newuser,
 	})
 }
 
@@ -48,5 +50,7 @@ func indexPOSTHandler(w http.ResponseWriter, r *http.Request) {
 
 	//models.users.SetA{userName, userLastname, userEmail, userPassword}
 	newuser = models.CreateNewUser(userName, userLastname, userEmail, userPassword)
+	log.Println(newuser)
+	database.CreateUser(newuser)
 	http.Redirect(w, r, "/", 302)
 }

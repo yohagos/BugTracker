@@ -6,10 +6,10 @@ import (
 
 // User struct
 type User struct {
-	name     string
-	lastname string
-	email    string
-	password string
+	name     string `bson:"name" json:"name"`
+	lastname string `bson:"lastname" json:"lastname"`
+	email    string `bson:"email" json:"email"`
+	password string `bson:"password" json:"password"`
 }
 
 // GetAllUserInformation func
@@ -26,6 +26,7 @@ func CreateNewUser(userList ...string) *User {
 	fmt.Println("Password: " + userList[3] + "\n")
 
 	user := User{name: userList[0], lastname: userList[1], email: userList[2], password: userList[3]}
+	//database.CreateUser(user)
 	return &user
 }
 

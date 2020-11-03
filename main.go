@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"./database"
 	"./routes"
 	utils "./utils"
 )
@@ -12,6 +13,13 @@ import (
 var ctx = context.TODO()
 
 func main() {
+	log.Println("Initilate Database..")
+	database.Init()
+
+	/* var list []string = {"Yosef", "Hagos", "test@test.de", "test123"}
+	models.CreateNewUser(list) */
+
+	log.Println("Loading Templates..")
 	utils.LoadTemplate("static/*.html")
 
 	r := routes.NewRouter()
