@@ -1,10 +1,9 @@
-package database
+package databases
 
 import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"../models"
 	"../utils"
@@ -18,14 +17,6 @@ var (
 	userCollection *mongo.Collection
 	mongoClient    *mongo.Client
 )
-
-/* // Person struct
-type Person struct {
-	name string `bson:"name" json:"name"`
-	city string `bson:"city" json:"city"`
-	/* 	createdAt time.Time `bson:"createdAt" json:"createdAt"`
-	   	updatedAt time.Time `bson:"updatedAt" json:"updatedAt"`
-} */
 
 // Init func
 func Init() {
@@ -43,38 +34,43 @@ func Init() {
 
 // CreateUser func
 func CreateUser(user *models.User) error {
-	/* _, err := collection.InsertOne(ctx, person)
-	return err */
-	log.Println(user)
 	_, err := userCollection.InsertOne(ctx, bson.D{
 		{Key: "name", Value: user.GetUserName()},
 		{Key: "lastname", Value: user.GetUserLastname()},
 		{Key: "email", Value: user.GetUserEmail()},
 		{Key: "password", Value: user.GetUserPassword()},
-		{Key: "createdAt", Value: time.Now()},
-		{Key: "updatedAt", Value: time.Now()},
+		{Key: "createdAt", Value: user.GetUserCreatedAt()},
+		{Key: "updatedAt", Value: user.GetUserUpdatedAt()},
 	})
 	return err
 }
 
-/* // CreatePerson func
-func CreatePerson(name, lastname, email,  string) {
-	p := Person{name: name, city: city}
-	if err := CreateDocument(p); err != nil {
+// GetAllUsers func
+func GetAllUsers() ([]*models.User, error) {
+	findOptions := options.Find()
+
+	var results []*models.User
+
+	cursor, err := userCollection.Find(ctx, bson.D{{}}, findOptions)
+	if err != nil {
 		log.Fatal(err)
 	}
-} */
+	defer cursor.Close(ctx)
 
-/* collection = mongoClient.Database("mydb").Collection("person")
-yosef := person{
-	ID:        primitive.NewObjectID(),
-	name:      "Yosef",
-	city:      "Darmstadt",
-	createdAt: time.Now(),
-	updatedAt: time.Now(),
+	for cursor.Next(ctx) {
+		var element *models.User
+		err := cursor.Decode(&element)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		results = append(results, element)
+	}
+
+	if err := cursor.Err(); err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	return results, err
 }
-
-_, err := collection.InsertOne(ctx, bson.M{
-	"name": yosef.name,
-})
-ifError(err) */

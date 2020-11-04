@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"../database"
+	"../databases"
 	"../models"
 	"../utils"
 	"github.com/gorilla/mux"
@@ -18,7 +18,9 @@ var newuser *models.User
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/", indexGETHandler).Methods("GET")
-	router.HandleFunc("/", indexPOSTHandler).Methods("POST")
+
+	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
+	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
 
 	fs := http.FileServer(http.Dir("../static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
@@ -27,30 +29,39 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	var display bool
-	display = false
-	/* if len(newuser.GetUserName()) > 0 {
-		display = true
-	} */
-	utils.ExecuteTemplate(w, "index.html", struct {
-		Display bool
-		User    *models.User
-	}{
-		Display: display,
-		User:    newuser,
-	})
+	users, err := databases.GetAllUsers()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(users) <= 0 {
+		utils.ExecuteTemplate(w, "index.html", nil)
+	} else {
+		utils.ExecuteTemplate(w, "index.html", struct {
+			User []*models.User
+		}{
+			User: users,
+		})
+	}
+
 }
 
-func indexPOSTHandler(w http.ResponseWriter, r *http.Request) {
+/* func indexPOSTHandler(w http.ResponseWriter, r *http.Request) {
+
+	http.Redirect(w, r, "/", 302)
+} */
+
+func registrationGETHandler(w http.ResponseWriter, r *http.Request) {
+	utils.ExecuteTemplate(w, "registration.html", nil)
+}
+
+func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	userName := r.PostForm.Get("name")
 	userLastname := r.PostForm.Get("lastname")
 	userEmail := r.PostForm.Get("email")
 	userPassword := r.PostForm.Get("password")
 
-	//models.users.SetA{userName, userLastname, userEmail, userPassword}
 	newuser = models.CreateNewUser(userName, userLastname, userEmail, userPassword)
-	log.Println(newuser)
-	database.CreateUser(newuser)
+	databases.CreateUser(newuser)
 	http.Redirect(w, r, "/", 302)
 }

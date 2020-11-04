@@ -6,25 +6,22 @@
     </head>
 
     <body>
-    
-        <br>
-        <form method="post">
-            <input id="userName" name="name" type="text" placeholder="Name"><br>
-            <input id="userLastname" name="lastname" type="text" placeholder="Lastname"><br>
-            <input id="userEmail" name="email" type="text" placeholder="Email"><br>
-            <input id="userPassword" name="password" type="text" placeholder="Password"><br>
-            <button type="submit">Send</button>
-        </form>
-        <br><br>
-        {{ if .Display}}
-            <hr style="width: 100%;">
-            <h2>New User created : </h2>
+        <!-- NAV -->
+        <section class="navbar">
+            <nav>
+                <a href="/registration">Registration</a>
+            </nav>
+        </section>
+
+        <!-- MAIN -->
+        <section class="main">
             <ul>
-                <li>Name: {{.User.GetUserName}}</li>
-                <li>Lastname: {{.User.GetUserLastname}} </li>
-                <li>Email: {{.User.GetUserEmail}}</li>
-                <li>Password: {{.User.GetUserPassword}}</li>
+                {{ range .users }}
+                    <li>{{ .users.GetUserName }}</li>
+                {{ end }}
             </ul>
-        {{ end }}
+        </section>
+
+        <!-- FOOTER -->
     </body>
 </html>

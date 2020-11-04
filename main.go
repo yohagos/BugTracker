@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"./database"
+	"./databases"
 	"./routes"
 	utils "./utils"
 )
@@ -14,10 +14,7 @@ var ctx = context.TODO()
 
 func main() {
 	log.Println("Initilate Database..")
-	database.Init()
-
-	/* var list []string = {"Yosef", "Hagos", "test@test.de", "test123"}
-	models.CreateNewUser(list) */
+	databases.Init()
 
 	log.Println("Loading Templates..")
 	utils.LoadTemplate("static/*.html")
