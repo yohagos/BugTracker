@@ -15,7 +15,7 @@ var ctx = context.TODO()
 func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
-
+	//os.Exit(0)
 	log.Println("Loading Templates..")
 	utils.LoadTemplate("static/*.html")
 

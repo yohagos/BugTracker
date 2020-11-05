@@ -8,6 +8,7 @@ import (
 	"../models"
 	"../utils"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -15,8 +16,14 @@ import (
 var ctx = context.TODO()
 var (
 	userCollection *mongo.Collection
+	postCollection *mongo.Collection
 	mongoClient    *mongo.Client
 )
+
+type Post struct {
+	Title string `json:"title,omitempty"`
+	Body  string `json:"body,omitempty"`
+}
 
 // Init func
 func Init() {
@@ -30,6 +37,22 @@ func Init() {
 	fmt.Println("Connected to MongoDB!")
 
 	userCollection = mongoClient.Database("bugTracker").Collection("user")
+	postCollection = mongoClient.Database("bugTracker").Collection("post")
+
+	/* title := "Whats up Buddy?"
+
+	body := "How are you? If you like, we could visit Tokyo next week. Best Regards, Yosie"
+	*/
+	/* postToBen := Post{"Ben", "Whats Up"}
+	postToMary := Post{"Mary", "Looking Good"}
+	postToDean := Post{"Sam", "Family Business"}
+
+	insertMany := []interface{}{postToBen, postToMary, postToDean} */
+	/* id := insertPost(title, body) */
+	/* insertManyPost(insertMany)
+
+	findDocument("Sam") */
+	//getPost(id)
 }
 
 // CreateUser func
@@ -46,31 +69,74 @@ func CreateUser(user *models.User) error {
 }
 
 // GetAllUsers func
-func GetAllUsers() ([]*models.User, error) {
-	findOptions := options.Find()
+func GetAllUsers() ([]bson.M, error) {
+	var results []bson.M
 
-	var results []*models.User
-
-	cursor, err := userCollection.Find(ctx, bson.D{{}}, findOptions)
+	cursor, err := userCollection.Find(ctx, bson.D{})
 	if err != nil {
 		log.Fatal(err)
+		defer cursor.Close(ctx)
+		return nil, err
 	}
-	defer cursor.Close(ctx)
-
 	for cursor.Next(ctx) {
-		var element *models.User
-		err := cursor.Decode(&element)
+		/* var result interface{}
+		err := cursor.Decode(&result)
 		if err != nil {
 			log.Fatal(err)
+			return nil, err
 		}
-
-		results = append(results, element)
-	}
-
-	if err := cursor.Err(); err != nil {
-		log.Fatal(err)
-		return nil, err
+		//fmt.Println(result)
+		findUser := models.User{}
+		b, err := json.Unmarshal(findUser, &result)
+		fmt.Println(string(b))
+		results = append(results, result) */
 	}
 
 	return results, err
+}
+
+func insertOnePost(title, body string) string {
+	post := Post{title, body}
+
+	insertResults, err := postCollection.InsertOne(ctx, post)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Inserted ID: ", insertResults.InsertedID)
+
+	return fmt.Sprint(insertResults.InsertedID)
+}
+
+func insertManyPost(manyPosts []interface{}) {
+	/* /_, err := postCollection.InsertMany(ctx, manyPosts)
+	if err != nil {
+		log.Fatal(err)
+	} */
+
+}
+
+/* func getPost(id string) {
+	filter := bson.D{{}}
+
+	var post Post
+
+	err := postCollection.FindOne(ctx, filter).Decode(&post)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Found post with Title: ", post.Title)
+} */
+
+func findDocument(who string) {
+	filter := bson.D{primitive.E{Key: "title", Value: who}}
+	var readPost Post
+	err := postCollection.FindOne(ctx, filter).Decode(&readPost)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(readPost.Title + "\n" + readPost.Body)
 }

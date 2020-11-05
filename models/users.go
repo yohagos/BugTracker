@@ -6,6 +6,7 @@ import (
 
 // User struct
 type User struct {
+	id        string    `bson:"_id" json:"_id"`
 	name      string    `bson:"name" json:"name"`
 	lastname  string    `bson:"lastname" json:"lastname"`
 	email     string    `bson:"email" json:"email"`
@@ -23,6 +24,11 @@ func (user *User) GetAllUserInformation() *User {
 func CreateNewUser(userList ...string) *User {
 	user := User{name: userList[0], lastname: userList[1], email: userList[2], password: userList[3], createdAt: time.Now(), updatedAt: time.Now()}
 	return &user
+}
+
+// GetUserID func
+func (user *User) GetUserID() string {
+	return user.id
 }
 
 // GetUserName func

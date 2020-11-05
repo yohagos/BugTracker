@@ -9,6 +9,7 @@ import (
 	"../models"
 	"../utils"
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var ctx = context.TODO()
@@ -29,17 +30,17 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	users, err := databases.GetAllUsers()
+	Users, err := databases.GetAllUsers()
 	if err != nil {
 		log.Fatal(err)
 	}
-	if len(users) <= 0 {
+	if len(Users) <= 0 {
 		utils.ExecuteTemplate(w, "index.html", nil)
 	} else {
 		utils.ExecuteTemplate(w, "index.html", struct {
-			User []*models.User
+			User []bson.M
 		}{
-			User: users,
+			User: Users,
 		})
 	}
 
