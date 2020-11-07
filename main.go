@@ -14,6 +14,8 @@ import (
 var ctx = context.TODO()
 
 func main() {
+	utils.RandomKey()
+	os.Exit(0)
 	log.Println("Initilate Database..")
 	databases.Init()
 	databases.FindDocument("Basir")

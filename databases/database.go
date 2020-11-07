@@ -151,9 +151,7 @@ func FindDocument(who string) {
 	}
 	for _, v := range result {
 		fmt.Println(v)
-		for _, w := range v {
-			fmt.Println(w)
-		}
+
 	}
 
 }
