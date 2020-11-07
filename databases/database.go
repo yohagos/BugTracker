@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"../models"
 	"../utils"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -69,16 +69,27 @@ func CreateUser(user *models.User) error {
 }
 
 // GetAllUsers func
-func GetAllUsers() ([]bson.M, error) {
-	var results []bson.M
+func GetAllUsers() /* ([]bson.M, error) */ {
+	/* var resultsList []bson.M */
 
 	cursor, err := userCollection.Find(ctx, bson.D{})
 	if err != nil {
 		log.Fatal(err)
 		defer cursor.Close(ctx)
-		return nil, err
+		/* return nil, err */
 	}
+	defer cursor.Close(ctx)
 	for cursor.Next(ctx) {
+
+		fmt.Println(cursor.Current)
+
+		var userResult models.User
+		err := cursor.Decode(&userResult)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(userResult, "\n")
 		/* var result interface{}
 		err := cursor.Decode(&result)
 		if err != nil {
@@ -92,7 +103,7 @@ func GetAllUsers() ([]bson.M, error) {
 		results = append(results, result) */
 	}
 
-	return results, err
+	/* return results, err */
 }
 
 func insertOnePost(title, body string) string {
@@ -131,12 +142,35 @@ func insertManyPost(manyPosts []interface{}) {
 	fmt.Println("Found post with Title: ", post.Title)
 } */
 
-func findDocument(who string) {
-	filter := bson.D{primitive.E{Key: "title", Value: who}}
-	var readPost Post
-	err := postCollection.FindOne(ctx, filter).Decode(&readPost)
+func FindDocument(who string) {
+	filter := bson.D{{Key: "name", Value: who}}
+	var result bson.D
+	err := userCollection.FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(readPost.Title + "\n" + readPost.Body)
+	for _, v := range result {
+		fmt.Println(v)
+		for _, w := range v {
+			fmt.Println(w)
+		}
+	}
+
+}
+
+func UpdateUser(name string) {
+	filter := bson.D{{"name", "Yosie"}}
+	newName := bson.D{
+		{"$set", bson.D{
+			{"name", name},
+			{"updatedAt", time.Now()},
+		}}}
+
+	res, err := userCollection.UpdateOne(ctx, filter, newName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	updatedObject := *res
+
+	fmt.Printf("Matched count: %d\nModified count: %d\n", updatedObject.MatchedCount, updatedObject.ModifiedCount)
 }

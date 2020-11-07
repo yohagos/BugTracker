@@ -2,17 +2,19 @@ package models
 
 import (
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // User struct
 type User struct {
-	id        string    `bson:"_id" json:"_id"`
-	name      string    `bson:"name" json:"name"`
-	lastname  string    `bson:"lastname" json:"lastname"`
-	email     string    `bson:"email" json:"email"`
-	password  string    `bson:"password" json:"password"`
-	createdAt time.Time `bson:"createdAt" json:"createdAt"`
-	updatedAt time.Time `bson:"updatedAt" json:"updatedAt"`
+	id        *primitive.ObjectID `bson:"_id" json:"id"`
+	name      string              `bson:"name" json:"name"`
+	lastname  string              `bson:"lastname" json:"lastname"`
+	email     string              `bson:"email" json:"email"`
+	password  string              `bson:"password" json:"password"`
+	createdAt time.Time           `bson:"createdAt" json:"createdAt"`
+	updatedAt time.Time           `bson:"updatedAt" json:"updatedAt"`
 }
 
 // GetAllUserInformation func
@@ -28,7 +30,12 @@ func CreateNewUser(userList ...string) *User {
 
 // GetUserID func
 func (user *User) GetUserID() string {
-	return user.id
+	var ID []byte
+	for _, v := range user.id {
+		ID = append(ID, v)
+	}
+	userID := string(ID)
+	return userID
 }
 
 // GetUserName func

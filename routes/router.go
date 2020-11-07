@@ -2,14 +2,12 @@ package routes
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"../databases"
 	"../models"
 	"../utils"
 	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 var ctx = context.TODO()
@@ -30,7 +28,7 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	Users, err := databases.GetAllUsers()
+	/* Users, err := databases.GetAllUsers()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,8 +40,8 @@ func indexGETHandler(w http.ResponseWriter, r *http.Request) {
 		}{
 			User: Users,
 		})
-	}
-
+	} */
+	utils.ExecuteTemplate(w, "index.html", nil)
 }
 
 /* func indexPOSTHandler(w http.ResponseWriter, r *http.Request) {
