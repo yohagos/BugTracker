@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"../databases"
 	"../middleware"
 	"../models"
 	sess "../sessions"
@@ -56,7 +55,7 @@ func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	userPassword := r.PostForm.Get("password")
 
 	newuser = models.CreateNewUser(userName, userLastname, userEmail, userPassword)
-	databases.CreateUser(newuser)
+	//databases.CreateUser(newuser)
 	http.Redirect(w, r, "/", 302)
 }
 

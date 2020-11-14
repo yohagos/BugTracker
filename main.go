@@ -14,12 +14,12 @@ import (
 var ctx = context.TODO()
 
 func main() {
-	utils.RandomKey()
-	os.Exit(0)
+
+	//os.Exit(0)
 	log.Println("Initilate Database..")
 	databases.Init()
-	databases.FindDocument("Basir")
-	databases.UpdateUser("Yosie")
+	/* databases.FindDocument("Basir")
+	databases.UpdateUser("Yosie") */
 	/* databases.FindDocument("Yosie")
 	databases.UpdateUser("Basir") */
 	os.Exit(0)
