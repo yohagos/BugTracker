@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"./databases"
+	"./models"
 	"./routes"
 	utils "./utils"
 )
@@ -14,14 +15,13 @@ import (
 var ctx = context.TODO()
 
 func main() {
-
-	//os.Exit(0)
 	log.Println("Initilate Database..")
 	databases.Init()
-	/* databases.FindDocument("Basir")
-	databases.UpdateUser("Yosie") */
-	/* databases.FindDocument("Yosie")
-	databases.UpdateUser("Basir") */
+
+	models.CreateTestUser()
+
+	databases.ReadAllDocumentsFromQuickCollection()
+	databases.DropCollection()
 	os.Exit(0)
 
 	log.Println("Loading Templates..")

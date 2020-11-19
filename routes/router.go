@@ -48,13 +48,13 @@ func registrationGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	/* r.ParseForm()
 	userName := r.PostForm.Get("name")
 	userLastname := r.PostForm.Get("lastname")
 	userEmail := r.PostForm.Get("email")
 	userPassword := r.PostForm.Get("password")
-
-	newuser = models.CreateNewUser(userName, userLastname, userEmail, userPassword)
+	*/
+	//newuser = models.CreateNewUser(userName, userLastname, userEmail, userPassword)
 	//databases.CreateUser(newuser)
 	http.Redirect(w, r, "/", 302)
 }

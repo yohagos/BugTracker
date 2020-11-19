@@ -16,32 +16,21 @@ import (
 
 var ctx = context.TODO()
 var (
-	/* userCollection    *mongo.Collection
-	postCollection    *mongo.Collection */
-	podcastCollection *mongo.Collection
-	episodeCollection *mongo.Collection
-
 	quickCollection *mongo.Collection
+
+	userCollection *mongo.Collection
 
 	mongoClient *mongo.Client
 )
 
-// Podcast struct
-type Podcast struct {
-	ID     primitive.ObjectID `bson:"_id,omitempty`
-	Title  string             `bson:"title,omitempty`
-	Author string             `bson:"author,omitempty`
-	Tags   []string           `bson:"tags,omitempty`
-}
-
-// Episode struct
+/* // Episode struct
 type Episode struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty`
 	Podcast     primitive.ObjectID `bson:"_id,omitempty`
 	Title       string             `bson:"title,omitempty`
 	Description string             `bson:"description,omitempty`
 	Duration    int32              `bson:"duration,omitempty`
-}
+} */
 
 // Init func
 func Init() {
@@ -54,26 +43,24 @@ func Init() {
 	mongoClient = client
 	fmt.Println("Connected to MongoDB!")
 
-	/* userCollection = mongoClient.Database("bugTracker").Collection("user")
-	postCollection = mongoClient.Database("bugTracker").Collection("post") */
-
-	podcastCollection = mongoClient.Database("bugTracker").Collection("podcast")
-	episodeCollection = mongoClient.Database("bugTracker").Collection("episode")
-
-	quickCollection = mongoClient.Database("bugTracker").Collection("quick")
+	userCollection = mongoClient.Database("bugTracker").Collection("users")
+	//quickCollection = mongoClient.Database("bugTracker").Collection("quick")
 
 	//createPodcastEntry()
 
 	//quickEntry()
 	//quickEntryTwo()
 	//quickEntriesMany()
-
-	//readAllDocumentsFromQuickCollection()
+	//deletingSingleDocument()
+	//deletingManyDocument()
+	//updating()
+	//updatingMany()
+	ReadAllDocumentsFromQuickCollection()
 	//readAllDocumentsFromQuickCollectionWithIteration()
-
+	//replacingInDocument()
 	//readOneDocument()
-	readOneDocumentFilter()
-
+	//readOneDocumentFilter()
+	//dropCollection()
 	//listDatabases()
 }
 
@@ -85,21 +72,6 @@ func listDatabases() {
 	fmt.Println(databases)
 }
 
-/*
-func createPodcastEntry() {
-	podcast := Podcast{
-		Title:  "How to ? Golang & Mongo",
-		Author: "Yosef Hagos",
-		Tags:   []string{"development", "programming", "coding", "go", "golang", "mongodb"},
-	}
-
-	insertResult, err := podcastCollection.InsertOne(ctx, podcast)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Println(insertResult.InsertedID)
-} */
-
 func quickEntry() {
 	_, err := quickCollection.InsertOne(ctx, bson.D{
 		{Key: "title", Value: "Monkey King"},
@@ -108,6 +80,16 @@ func quickEntry() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+}
+
+// AddNewUser func
+func AddNewUser(newUser bson.D) error {
+	result, err := userCollection.InsertOne(ctx, newUser)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("New User added: %v\n", result.InsertedID)
+	return nil
 }
 
 func quickEntryTwo() {
@@ -147,8 +129,8 @@ func quickEntriesMany() {
 	}
 }
 
-func readAllDocumentsFromQuickCollection() {
-	cursor, err := quickCollection.Find(ctx, bson.M{})
+func ReadAllDocumentsFromQuickCollection() {
+	cursor, err := userCollection.Find(ctx, bson.M{})
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -213,4 +195,70 @@ func sortingDocuments() {
 		log.Fatalln(err)
 	}
 	fmt.Println(document)
+}
+
+func updating() {
+	id, _ := primitive.ObjectIDFromHex("5fb6816b6a15dd3065886ead")
+	result, err := quickCollection.UpdateOne(
+		ctx,
+		bson.M{"_id": id},
+		bson.D{
+			{"$set", bson.D{{Key: "author", Value: "Castiel"}}},
+		},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
+}
+
+func updatingMany() {
+	result, err := quickCollection.UpdateOne(
+		ctx,
+		bson.M{"titlt": "Arrow"},
+		bson.D{
+			{"$set", bson.D{{Key: "author", Value: "Diggle"}}},
+		},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
+}
+
+/* Replacing in MongoDB - es ist kein UPDATE, sondern ERSETZT das komplette Dokument */
+func replacingInDocument() {
+	result, _ := quickCollection.ReplaceOne(
+		ctx,
+		bson.M{"author": "Castiel"},
+		bson.M{
+			"title":  "Lucifer",
+			"author": "Gott",
+		},
+	)
+	fmt.Printf("Replaced %v Documents", result.ModifiedCount)
+}
+
+func deletingSingleDocument() {
+	result, err := quickCollection.DeleteOne(ctx, bson.M{"title": "Arrow"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
+}
+
+func deletingManyDocument() {
+	result, err := quickCollection.DeleteMany(ctx, bson.M{"duration": 200})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("DeleteMany removed %v document(s)\n", result.DeletedCount)
+}
+
+func DropCollection() {
+	if err := userCollection.Drop(ctx); err != nil {
+		log.Fatal(err)
+	}
 }
