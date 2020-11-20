@@ -5,13 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"../middleware"
 	"../models"
-	sess "../sessions"
 	"../utils"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 )
 
 var ctx = context.TODO()
@@ -20,7 +17,8 @@ var newuser *models.User
 // NewRouter func
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/", middleware.AuthRequired(indexGETHandler)).Methods("GET")
+	// router.HandleFunc("/", middleware.AuthRequired(indexGETHandler)).Methods("GET")
+	router.HandleFunc("/", indexGETHandler).Methods("GET")
 
 	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
 	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
@@ -35,11 +33,11 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(sess.Store, r, "session")
+	/* session, _ := sessions.Store.Get(sess.Store, r, "session")
 	untypeduser_id := session.Values["user_id"]
 	currentUser, _ := untypeduser_id.(int64)
 
-	fmt.Println(currentUser)
+	fmt.Println(currentUser) */
 	utils.ExecuteTemplate(w, "index.html", nil)
 }
 
@@ -48,15 +46,16 @@ func registrationGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
-	/* r.ParseForm()
-	userName := r.PostForm.Get("name")
-	userLastname := r.PostForm.Get("lastname")
-	userEmail := r.PostForm.Get("email")
-	userPassword := r.PostForm.Get("password")
-	*/
-	//newuser = models.CreateNewUser(userName, userLastname, userEmail, userPassword)
-	//databases.CreateUser(newuser)
-	http.Redirect(w, r, "/", 302)
+	var createUser models.User
+	r.ParseForm()
+	createUser.Name = r.PostForm.Get("name")
+	createUser.Lastname = r.PostForm.Get("lastname")
+	createUser.Email = r.PostForm.Get("email")
+	createUser.Password = r.PostForm.Get("password")
+
+	models.CreateNewUser(createUser)
+
+	http.Redirect(w, r, "/login", 302)
 }
 
 func loginGETHandler(w http.ResponseWriter, r *http.Request) {

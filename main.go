@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"./databases"
-	"./models"
 	"./routes"
 	utils "./utils"
 )
@@ -17,12 +16,9 @@ var ctx = context.TODO()
 func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
+	databases.GetUserInformations()
 
-	models.CreateTestUser()
-
-	databases.ReadAllDocumentsFromQuickCollection()
-	databases.DropCollection()
-	os.Exit(0)
+	os.Exit(3)
 
 	log.Println("Loading Templates..")
 	utils.LoadTemplate("static/*.html")
@@ -31,11 +27,5 @@ func main() {
 	log.Println("Server starting..")
 	if err := http.ListenAndServe(":8888", r); err != nil {
 		log.Fatal("Server error! Message : ", err)
-	}
-}
-
-func ifError(err error) {
-	if err != nil {
-		log.Fatal(err)
 	}
 }

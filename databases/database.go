@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 
-	"go.mongodb.org/mongo-driver/bson"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
-
+	"../models"
 	"../utils"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -55,7 +55,7 @@ func Init() {
 	//deletingManyDocument()
 	//updating()
 	//updatingMany()
-	ReadAllDocumentsFromQuickCollection()
+	//ReadAllDocumentsFromQuickCollection()
 	//readAllDocumentsFromQuickCollectionWithIteration()
 	//replacingInDocument()
 	//readOneDocument()
@@ -158,6 +158,14 @@ func readAllDocumentsFromQuickCollectionWithIteration() {
 		}
 		fmt.Println(document)
 	}
+}
+
+func GetUserInformations() {
+	var document models.User
+	if err := userCollection.FindOne(ctx, bson.M{"name": "Yosie"}).Decode(&document); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(document.Name)
 }
 
 func readOneDocument() {
