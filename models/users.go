@@ -17,27 +17,8 @@ type User struct {
 	UpdatedAt string             `bson:"updatedAt,omitempty"`
 }
 
-/* // CreateTestUser func
-func CreateTestUser() {
-	var user bson.D
-	time := utils.CreateTimeStamp()
-
-	user = bson.D{
-		{Key: "name", Value: "Yosef"},
-		{Key: "lastname", Value: "Hagos"},
-		{Key: "email", Value: "yosef@test.de"},
-		{Key: "password", Value: "12345"},
-		{Key: "createdAt", Value: time},
-		{Key: "updatedAt", Value: time},
-	}
-	err := databases.AddNewUser(user)
-	if err != nil {
-		log.Fatal(err)
-	}
-} */
-
 // CreateNewUser func
-func CreateNewUser(newUser User) User {
+func CreateNewUser(newUser User) bson.D {
 	var user bson.D
 	time := utils.CreateTimeStamp()
 
