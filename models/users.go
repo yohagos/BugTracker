@@ -1,6 +1,8 @@
 package models
 
 import (
+	"../utils"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -35,8 +37,8 @@ func CreateTestUser() {
 } */
 
 // CreateNewUser func
-func CreateNewUser(newUser User) {
-	/* var user bson.D
+func CreateNewUser(newUser User) User {
+	var user bson.D
 	time := utils.CreateTimeStamp()
 
 	user = bson.D{
@@ -47,12 +49,33 @@ func CreateNewUser(newUser User) {
 		{Key: "createdAt", Value: time},
 		{Key: "updatedAt", Value: time},
 	}
-	err := databases.AddNewUser(user)
-	utils.IsError(err) */
+	return user
 }
 
-/* func GetUser(){
-	//objid := "5fb7e71afac4670b98688ae8"
+func (user *User) GetUserID() string {
+	return user.ID.String()
+}
 
+func (user *User) GetUserName() string {
+	return user.Name
+}
 
-} */
+func (user *User) GetUserLastname() string {
+	return user.Lastname
+}
+
+func (user *User) GetUserEmail() string {
+	return user.Email
+}
+
+func (user *User) GetUserPassword() string {
+	return user.Password
+}
+
+func (user *User) GetUserCreatedAt() string {
+	return user.CreatedAt
+}
+
+func (user *User) GetUserUpdatedAt() string {
+	return user.UpdatedAt
+}

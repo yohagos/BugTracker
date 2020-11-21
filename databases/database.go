@@ -23,15 +23,6 @@ var (
 	mongoClient *mongo.Client
 )
 
-/* // Episode struct
-type Episode struct {
-	ID          primitive.ObjectID `bson:"_id,omitempty`
-	Podcast     primitive.ObjectID `bson:"_id,omitempty`
-	Title       string             `bson:"title,omitempty`
-	Description string             `bson:"description,omitempty`
-	Duration    int32              `bson:"duration,omitempty`
-} */
-
 // Init func
 func Init() {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
@@ -162,10 +153,10 @@ func readAllDocumentsFromQuickCollectionWithIteration() {
 
 func GetUserInformations() {
 	var document models.User
-	if err := userCollection.FindOne(ctx, bson.M{"name": "Yosie"}).Decode(&document); err != nil {
+	if err := userCollection.FindOne(ctx, bson.M{"name": "Basir"}).Decode(&document); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(document.Name)
+	fmt.Println("GetUserID()" + document.GetUserID())
 }
 
 func readOneDocument() {
@@ -265,7 +256,7 @@ func deletingManyDocument() {
 	fmt.Printf("DeleteMany removed %v document(s)\n", result.DeletedCount)
 }
 
-func DropCollection() {
+func dropCollection() {
 	if err := userCollection.Drop(ctx); err != nil {
 		log.Fatal(err)
 	}
