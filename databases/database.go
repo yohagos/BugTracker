@@ -17,16 +17,14 @@ import (
 var ctx = context.TODO()
 var (
 	quickCollection *mongo.Collection
-
-	userCollection *mongo.Collection
-
-	mongoClient *mongo.Client
+	userCollection  *mongo.Collection
+	mongoClient     *mongo.Client
 )
 
 // Init func
 func Init() {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-	client, err := mongo.Connect(ctx, clientOptions)
+	ClientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	client, err := mongo.Connect(ctx, ClientOptions)
 	utils.IsError(err)
 
 	err = client.Ping(context.TODO(), nil)
@@ -83,6 +81,11 @@ func AddNewUser(newUser bson.D) error {
 	return nil
 }
 
+// UserExists func
+func UserExists() {
+
+}
+
 func quickEntryTwo() {
 	_, err := quickCollection.InsertOne(ctx, bson.D{
 		{Key: "title", Value: "Monkey King"},
@@ -120,7 +123,7 @@ func quickEntriesMany() {
 	}
 }
 
-func ReadAllDocumentsFromQuickCollection() {
+func readAllDocumentsFromQuickCollection() {
 	cursor, err := userCollection.Find(ctx, bson.M{})
 	if err != nil {
 		log.Fatalln(err)
@@ -151,6 +154,7 @@ func readAllDocumentsFromQuickCollectionWithIteration() {
 	}
 }
 
+// GetUserInformations func
 func GetUserInformations() {
 	var document models.User
 	if err := userCollection.FindOne(ctx, bson.M{"name": "Basir"}).Decode(&document); err != nil {

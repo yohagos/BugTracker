@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"../databases"
+	"../middleware"
 	"../models"
 	"../utils"
 
@@ -18,8 +19,8 @@ var newuser *models.User
 // NewRouter func
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
-	// router.HandleFunc("/", middleware.AuthRequired(indexGETHandler)).Methods("GET")
-	router.HandleFunc("/", indexGETHandler).Methods("GET")
+	router.HandleFunc("/", middleware.AuthRequired(indexGETHandler)).Methods("GET")
+	// router.HandleFunc("/", indexGETHandler).Methods("GET")
 
 	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
 	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
@@ -34,11 +35,9 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	/* session, _ := sessions.Store.Get(sess.Store, r, "session")
-	untypeduser_id := session.Values["user_id"]
-	currentUser, _ := untypeduser_id.(int64)
+	/* 	session, _ := sessions.Store.Get(r, "session")
 
-	fmt.Println(currentUser) */
+	   	fmt.Println(currentUser) */
 	utils.ExecuteTemplate(w, "index.html", nil)
 }
 
