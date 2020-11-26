@@ -2,25 +2,23 @@ package routes
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"../databases"
 	"../middleware"
 	"../models"
+	"../sessions"
 	"../utils"
 
 	"github.com/gorilla/mux"
 )
 
 var ctx = context.TODO()
-var newuser *models.User
 
 // NewRouter func
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/", middleware.AuthRequired(indexGETHandler)).Methods("GET")
-	// router.HandleFunc("/", indexGETHandler).Methods("GET")
 
 	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
 	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
@@ -35,9 +33,16 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	/* 	session, _ := sessions.Store.Get(r, "session")
+	session, err := sessions.Store.Get(r, "session")
+	if err != nil {
+		utils.InternalServerError(w)
+	}
 
-	   	fmt.Println(currentUser) */
+	currentUser := session.Values["username"]
+	ok := databases.UserExists(currentUser.(string))
+	if !ok {
+		http.Redirect(w, r, "/", 302)
+	}
 	utils.ExecuteTemplate(w, "index.html", nil)
 }
 
@@ -67,5 +72,18 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
 
-	fmt.Println(username + password)
+	ok := databases.UserAuthentification(username, password)
+
+	if ok != nil {
+		utils.ExecuteTemplate(w, "login.html", utils.ErrorInvalidLogin)
+	}
+
+	session, err := sessions.Store.Get(r, "session")
+	utils.IsError(err)
+	session.Values["username"] = username
+
+	err = session.Save(r, w)
+	utils.IsError(err)
+
+	http.Redirect(w, r, "/", 302)
 }

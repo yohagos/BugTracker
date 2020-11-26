@@ -2,6 +2,7 @@ package databases
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 
@@ -33,24 +34,6 @@ func Init() {
 	fmt.Println("Connected to MongoDB!")
 
 	userCollection = mongoClient.Database("bugTracker").Collection("users")
-	//quickCollection = mongoClient.Database("bugTracker").Collection("quick")
-
-	//createPodcastEntry()
-
-	//quickEntry()
-	//quickEntryTwo()
-	//quickEntriesMany()
-	//deletingSingleDocument()
-	//deletingManyDocument()
-	//updating()
-	//updatingMany()
-	//ReadAllDocumentsFromQuickCollection()
-	//readAllDocumentsFromQuickCollectionWithIteration()
-	//replacingInDocument()
-	//readOneDocument()
-	//readOneDocumentFilter()
-	//dropCollection()
-	//listDatabases()
 }
 
 func listDatabases() {
@@ -71,6 +54,18 @@ func quickEntry() {
 	}
 }
 
+func TestUser() {
+	_, err := userCollection.InsertOne(ctx, bson.D{
+		{Key: "name", Value: "Yosef"},
+		{Key: "lastname", Value: "Hagos"},
+		{Key: "email", Value: "yosef.hagos@googlemail.com"},
+		{Key: "password", Value: "12345"},
+	})
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
 // AddNewUser func
 func AddNewUser(newUser bson.D) error {
 	result, err := userCollection.InsertOne(ctx, newUser)
@@ -81,9 +76,28 @@ func AddNewUser(newUser bson.D) error {
 	return nil
 }
 
-// UserExists func
-func UserExists() {
+// UserAuthentification func
+func UserAuthentification(username, password string) error {
+	var user models.User
+	if err := userCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
+		log.Fatal(err)
+	}
+	if user.GetUserPassword() == password {
+		return nil
+	}
+	ErrorUserDoesNotExist := errors.New("Login is invalid. Username / Password does not exists")
 
+	return ErrorUserDoesNotExist
+}
+
+// UserExists func
+func UserExists(username string) bool {
+	var user models.User
+	if err := userCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
+		log.Println(err)
+		return false
+	}
+	return true
 }
 
 func quickEntryTwo() {

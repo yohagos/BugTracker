@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"os"
 
 	"./databases"
 	"./routes"
@@ -16,9 +15,9 @@ var ctx = context.TODO()
 func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
-	databases.GetUserInformations()
-
-	os.Exit(3)
+	//databases.GetUserInformations()
+	//databases.TestUser()
+	//os.Exit(3)
 
 	log.Println("Loading Templates..")
 	utils.LoadTemplate("static/*.html")
