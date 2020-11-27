@@ -7,7 +7,8 @@ import (
 
 	"./databases"
 	"./routes"
-	utils "./utils"
+	"./sessions"
+	"./utils"
 )
 
 var ctx = context.TODO()
@@ -18,6 +19,8 @@ func main() {
 	//databases.GetUserInformations()
 	//databases.TestUser()
 	//os.Exit(3)
+
+	sessions.SessionInit()
 
 	log.Println("Loading Templates..")
 	utils.LoadTemplate("static/*.html")

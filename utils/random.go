@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"fmt"
 	"math/rand"
 )
 
-func RandomKey() {
+// RandomKey func
+func RandomKey() string {
 	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-!?"
 	var length = 30
 	var byteSlice []byte
@@ -17,5 +17,5 @@ func RandomKey() {
 	}
 
 	result = string(byteSlice)
-	fmt.Println(result)
+	return result
 }
