@@ -20,7 +20,7 @@ var ctx = context.TODO()
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/", middleware.AuthRequired(indexGETHandler)).Methods("GET")
-	router.HandleFunc("/test", testGETHandler).Methods("GET")
+
 	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
 	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
 
@@ -34,10 +34,10 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	/* session, _ := sessions.Store.Get(r, "session")
-	if err != nil {
+	session, _ := sessions.Store.Get(r, "session")
+	/* if err != nil {
 		utils.InternalServerError(w)
-	}
+	} */
 	//ok = databases.UserExists(currentUser.(string))
 	currentUser, ok := session.Values["username"]
 	if !ok {
@@ -48,7 +48,9 @@ func indexGETHandler(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		log.Println(ok)
 		http.Redirect(w, r, "/login", 302)
-	} */
+	}
+
+	log.Println(username)
 
 	utils.ExecuteTemplate(w, "index.html", nil)
 }
@@ -87,28 +89,12 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(username + " " + password)
 
-	session, err := sessions.Store.Get(r, "session")
-	utils.IsError(err)
+	session, _ := sessions.Store.Get(r, "session")
+	//utils.IsError(err)
 	session.Values["username"] = username
 
 	session.Save(r, w)
 	//utils.IsError(err)
 
-	http.Redirect(w, r, "/test", 302)
-}
-
-func testGETHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
-	currentUser, ok := session.Values["username"]
-	if !ok {
-		log.Println(ok)
-		http.Redirect(w, r, "/login", 302)
-	}
-	username, ok := currentUser.(string)
-	if !ok {
-		log.Println(ok)
-		http.Redirect(w, r, "/login", 302)
-	}
-
-	w.Write([]byte(username))
+	http.Redirect(w, r, "/", 302)
 }

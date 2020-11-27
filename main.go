@@ -16,9 +16,6 @@ var ctx = context.TODO()
 func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
-	//databases.GetUserInformations()
-	//databases.TestUser()
-	//os.Exit(3)
 
 	sessions.SessionInit()
 
