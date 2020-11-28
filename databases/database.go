@@ -54,6 +54,7 @@ func quickEntry() {
 	}
 }
 
+// TestUser func
 func TestUser() {
 	_, err := userCollection.InsertOne(ctx, bson.D{
 		{Key: "name", Value: "Yosef"},
@@ -64,6 +65,7 @@ func TestUser() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	log.Println("Created Test User !")
 }
 
 // AddNewUser func
@@ -169,12 +171,12 @@ func readAllDocumentsFromQuickCollectionWithIteration() {
 }
 
 // GetUserInformations func
-func GetUserInformations() {
+func GetUserInformations(username string) *models.User {
 	var document models.User
-	if err := userCollection.FindOne(ctx, bson.M{"name": "Basir"}).Decode(&document); err != nil {
+	if err := userCollection.FindOne(ctx, bson.M{"email": username}).Decode(&document); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("GetUserID()" + document.GetUserID())
+	return &document
 }
 
 func readOneDocument() {

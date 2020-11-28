@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"strings"
 
 	"../databases"
 	"../middleware"
@@ -19,13 +20,17 @@ var ctx = context.TODO()
 // NewRouter func
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/", middleware.AuthRequired(indexGETHandler)).Methods("GET")
+	router.HandleFunc("/", indexGETHandler).Methods("GET")
 
 	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
 	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
 
 	router.HandleFunc("/login", loginGETHandler).Methods("GET")
 	router.HandleFunc("/login", loginPOSTHandler).Methods("POST")
+
+	router.HandleFunc("/logout", logoutGETHandler).Methods("GET")
+
+	router.HandleFunc("/{profile}", middleware.AuthRequired(profileGETHandler)).Methods("GET")
 
 	fs := http.FileServer(http.Dir("../static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
@@ -34,24 +39,6 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
-	/* if err != nil {
-		utils.InternalServerError(w)
-	} */
-	//ok = databases.UserExists(currentUser.(string))
-	currentUser, ok := session.Values["username"]
-	if !ok {
-		log.Println(ok)
-		http.Redirect(w, r, "/login", 302)
-	}
-	username, ok := currentUser.(string)
-	if !ok {
-		log.Println(ok)
-		http.Redirect(w, r, "/login", 302)
-	}
-
-	log.Println(username)
-
 	utils.ExecuteTemplate(w, "index.html", nil)
 }
 
@@ -81,20 +68,49 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
 
-	/* ok := databases.UserAuthentification(username, password)
+	ok := databases.UserAuthentification(username, password)
 
 	if ok != nil {
 		utils.ExecuteTemplate(w, "login.html", utils.ErrorInvalidLogin)
-	} */
-
-	log.Println(username + " " + password)
+	}
 
 	session, _ := sessions.Store.Get(r, "session")
-	//utils.IsError(err)
 	session.Values["username"] = username
-
 	session.Save(r, w)
-	//utils.IsError(err)
 
-	http.Redirect(w, r, "/", 302)
+	http.Redirect(w, r, "/"+username, 302)
+}
+
+func profileGETHandler(w http.ResponseWriter, r *http.Request) {
+	i := r.URL.RequestURI()[1:]
+	if strings.EqualFold("favicon.ico", i) {
+		return
+	}
+
+	session, _ := sessions.Store.Get(r, "session")
+	currentUser, ok := session.Values["username"]
+	if !ok {
+		log.Println(ok)
+		http.Redirect(w, r, "/login", 302)
+	}
+
+	ok = databases.UserExists(currentUser.(string))
+	if !ok {
+		log.Println(ok)
+		http.Redirect(w, r, "/login", 302)
+	}
+	user := databases.GetUserInformations(currentUser.(string))
+
+	utils.ExecuteTemplate(w, "profile.html", struct {
+		User *models.User
+	}{
+		User: user,
+	})
+}
+
+func logoutGETHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := sessions.Store.Get(r, "session")
+	delete(session.Values, "username")
+	session.Save(r, w)
+	http.Redirect(w, r, "/login", 302)
 }

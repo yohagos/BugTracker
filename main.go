@@ -17,6 +17,8 @@ func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
 
+	//databases.TestUser()
+
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")

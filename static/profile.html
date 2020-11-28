@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Profile</title>
+    </head>
+
+    <body>
+        <!-- NAV -->
+        <section class="navbar">
+            <nav>
+                Navbar
+                <a href="/logout">Logout</a>
+            </nav>
+        </section>
+
+        <!-- MAIN -->
+        <section class="main">
+            <br>
+            <br>
+            <h1>Hello {{ .User.GetUserName }}</h1>
+            <!-- <ul>
+                {{ range .Users }}
+                    <li>{{ .Users.GetUserName }}</li>
+                {{ end }}
+            </ul> -->
+        </section>
+
+        <!-- FOOTER -->
+        <section class="footer">
+
+        </section>
+    </body>
+</html>
