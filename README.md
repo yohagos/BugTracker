@@ -6,11 +6,14 @@ Das Projekt soll zum nächst möglichen Zeitpunkt, sobald nach meinem Ermessen e
 
 Die folgenden Bibliotheken bzw. GitHub Repositorien wurden zur Erstellung bezogen und im Projekt genutzt:
 - github.com/gorilla/mux
-  Gorilla Mux (als Multiplexor / Server) stellt alle benötigten Funktionalitäten bereit, um die Client Requests zu verarbeiten und die Server Response bereitzustellen.
+Gorilla Mux (als Multiplexor / Server) stellt alle benötigten Funktionalitäten bereit, um die Client Requests zu verarbeiten und die Server Response bereitzustellen.
+
 - github.com/gorilla/sessions
-  Gorilla Sessions (zur Session-Verwaltung) wird verwendet um die User Sessions als Cookies zu speichern und somit einen grundlegenden Zugriffsschutz bereitzustellen.
+Gorilla Sessions (zur Session-Verwaltung) wird verwendet um die User Sessions als Cookies zu speichern und somit einen grundlegenden Zugriffsschutz bereitzustellen.
+
 - mongodb
-  \nDiverse Bibliotheken die von MongoDB bereitgestellt werden, so dass eine Verbindung zur Datenbank erzeugt werden kann und CRUD Operations durchgeführt werden können.
+Diverse Bibliotheken die von MongoDB bereitgestellt werden, so dass eine Verbindung zur Datenbank erzeugt werden kann und CRUD Operations durchgeführt werden können.
+
 
 Im Laufe des Developments möchte ich ebenfalls die Funktionen und Möglichkeiten von GitHub Actions kennenlernen und nutzen, um meinen CI/CD Prozess zu beschleunigen.
 
