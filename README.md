@@ -10,7 +10,7 @@ Die folgenden Bibliotheken bzw. GitHub Repositorien wurden zur Erstellung bezoge
 - github.com/gorilla/sessions
   Gorilla Sessions (zur Session-Verwaltung) wird verwendet um die User Sessions als Cookies zu speichern und somit einen grundlegenden Zugriffsschutz bereitzustellen.
 - mongodb
-  Diverse Bibliotheken die von MongoDB bereitgestellt werden, so dass eine Verbindung zur Datenbank erzeugt werden kann und CRUD Operations durchgeführt werden können.
+  \nDiverse Bibliotheken die von MongoDB bereitgestellt werden, so dass eine Verbindung zur Datenbank erzeugt werden kann und CRUD Operations durchgeführt werden können.
 
 Im Laufe des Developments möchte ich ebenfalls die Funktionen und Möglichkeiten von GitHub Actions kennenlernen und nutzen, um meinen CI/CD Prozess zu beschleunigen.
 
