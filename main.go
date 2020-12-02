@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net/http"
 
@@ -10,8 +9,6 @@ import (
 	"./sessions"
 	"./utils"
 )
-
-var ctx = context.TODO()
 
 func main() {
 	log.Println("Initilate Database..")

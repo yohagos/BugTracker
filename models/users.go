@@ -1,10 +1,16 @@
 package models
 
 import (
+	"context"
+	"log"
+
+	"../databases"
 	"../utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+var ctx = context.TODO()
 
 // User struct
 type User struct {
@@ -15,22 +21,6 @@ type User struct {
 	Password  string             `bson:"password,omitempty"`
 	CreatedAt string             `bson:"createdAt,omitempty"`
 	UpdatedAt string             `bson:"updatedAt,omitempty"`
-}
-
-// CreateNewUser func
-func CreateNewUser(newUser User) bson.D {
-	var user bson.D
-	time := utils.CreateTimeStamp()
-
-	user = bson.D{
-		{Key: "name", Value: newUser.Name},
-		{Key: "lastname", Value: newUser.Lastname},
-		{Key: "email", Value: newUser.Email},
-		{Key: "password", Value: newUser.Password},
-		{Key: "createdAt", Value: time},
-		{Key: "updatedAt", Value: time},
-	}
-	return user
 }
 
 func (user *User) GetUserID() string {
@@ -59,4 +49,39 @@ func (user *User) GetUserCreatedAt() string {
 
 func (user *User) GetUserUpdatedAt() string {
 	return user.UpdatedAt
+}
+
+// CreateNewUser func
+func (user *User) CreateNewUser() {
+	time := utils.CreateTimeStamp()
+
+	userDocument := bson.D{
+		{Key: "name", Value: user.Name},
+		{Key: "lastname", Value: user.Lastname},
+		{Key: "email", Value: user.Email},
+		{Key: "password", Value: user.Password},
+		{Key: "createdAt", Value: time},
+		{Key: "updatedAt", Value: time},
+	}
+
+	databases.AddNewUser(userDocument)
+}
+
+func (user *User) UserExists() bool {
+	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": user.GetUserName()}).Decode(&user); err != nil {
+		log.Fatal(err)
+		return false
+	}
+	return true
+}
+
+func UserAuthentification(username, password string) {
+	/* err := databases.UserAuthentification(username, password)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil */
+
+	// UserAuth muss noch angepasst werden
 }

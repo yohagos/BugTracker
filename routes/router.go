@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 
-	"../databases"
 	"../middleware"
 	"../models"
 	"../sessions"
@@ -54,7 +53,7 @@ func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	createUser.Email = r.PostForm.Get("email")
 	createUser.Password = r.PostForm.Get("password")
 
-	databases.AddNewUser(models.CreateNewUser(createUser))
+	createUser.CreateNewUser()
 
 	http.Redirect(w, r, "/login", 302)
 }
@@ -68,7 +67,7 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
 
-	ok := databases.UserAuthentification(username, password)
+	ok := models.UserAuthentification(username, password)
 
 	if ok != nil {
 		utils.ExecuteTemplate(w, "login.html", utils.ErrorInvalidLogin)
@@ -94,12 +93,12 @@ func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", 302)
 	}
 
-	ok = databases.UserExists(currentUser.(string))
+	ok = models.UserExists(currentUser.(string))
 	if !ok {
 		log.Println(ok)
 		http.Redirect(w, r, "/login", 302)
 	}
-	user := databases.GetUserInformations(currentUser.(string))
+	user := models.GetUserInformations(currentUser.(string))
 
 	utils.ExecuteTemplate(w, "profile.html", struct {
 		User *models.User

@@ -2,11 +2,9 @@ package databases
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 
-	"../models"
 	"../utils"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,7 +16,7 @@ import (
 var ctx = context.TODO()
 var (
 	quickCollection *mongo.Collection
-	userCollection  *mongo.Collection
+	UserCollection  *mongo.Collection
 	mongoClient     *mongo.Client
 )
 
@@ -33,7 +31,7 @@ func Init() {
 	mongoClient = client
 	fmt.Println("Connected to MongoDB!")
 
-	userCollection = mongoClient.Database("bugTracker").Collection("users")
+	UserCollection = mongoClient.Database("bugTracker").Collection("users")
 }
 
 func listDatabases() {
@@ -56,7 +54,7 @@ func quickEntry() {
 
 // TestUser func
 func TestUser() {
-	_, err := userCollection.InsertOne(ctx, bson.D{
+	_, err := UserCollection.InsertOne(ctx, bson.D{
 		{Key: "name", Value: "Yosef"},
 		{Key: "lastname", Value: "Hagos"},
 		{Key: "email", Value: "yosef.hagos@googlemail.com"},
@@ -70,7 +68,7 @@ func TestUser() {
 
 // AddNewUser func
 func AddNewUser(newUser bson.D) error {
-	result, err := userCollection.InsertOne(ctx, newUser)
+	result, err := UserCollection.InsertOne(ctx, newUser)
 	if err != nil {
 		return err
 	}
@@ -78,7 +76,7 @@ func AddNewUser(newUser bson.D) error {
 	return nil
 }
 
-// UserAuthentification func
+/* // UserAuthentification func
 func UserAuthentification(username, password string) error {
 	var user models.User
 	if err := userCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
@@ -90,9 +88,9 @@ func UserAuthentification(username, password string) error {
 	ErrorUserDoesNotExist := errors.New("Login is invalid. Username / Password does not exists")
 
 	return ErrorUserDoesNotExist
-}
+} */
 
-// UserExists func
+/* // UserExists func
 func UserExists(username string) bool {
 	var user models.User
 	if err := userCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
@@ -100,7 +98,7 @@ func UserExists(username string) bool {
 		return false
 	}
 	return true
-}
+} */
 
 func quickEntryTwo() {
 	_, err := quickCollection.InsertOne(ctx, bson.D{
@@ -140,7 +138,7 @@ func quickEntriesMany() {
 }
 
 func readAllDocumentsFromQuickCollection() {
-	cursor, err := userCollection.Find(ctx, bson.M{})
+	cursor, err := UserCollection.Find(ctx, bson.M{})
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -170,14 +168,14 @@ func readAllDocumentsFromQuickCollectionWithIteration() {
 	}
 }
 
-// GetUserInformations func
+/* // GetUserInformations func
 func GetUserInformations(username string) *models.User {
 	var document models.User
 	if err := userCollection.FindOne(ctx, bson.M{"email": username}).Decode(&document); err != nil {
 		log.Fatal(err)
 	}
 	return &document
-}
+} */
 
 func readOneDocument() {
 	var document bson.M
@@ -277,7 +275,7 @@ func deletingManyDocument() {
 }
 
 func dropCollection() {
-	if err := userCollection.Drop(ctx); err != nil {
+	if err := UserCollection.Drop(ctx); err != nil {
 		log.Fatal(err)
 	}
 }
