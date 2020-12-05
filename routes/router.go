@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"../apperrors"
 	"../middleware"
 	"../models"
 	"../sessions"
@@ -27,6 +28,12 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/login", loginGETHandler).Methods("GET")
 	router.HandleFunc("/login", loginPOSTHandler).Methods("POST")
 
+	router.HandleFunc("/login", bugtypeGETHandler).Methods("GET")
+	router.HandleFunc("/login", bugtypePOSTHandler).Methods("POST")
+
+	router.HandleFunc("/login", ticketsGETHandler).Methods("GET")
+	router.HandleFunc("/login", ticketsPOSTHandler).Methods("POST")
+
 	router.HandleFunc("/logout", logoutGETHandler).Methods("GET")
 
 	router.HandleFunc("/{profile}", middleware.AuthRequired(profileGETHandler)).Methods("GET")
@@ -38,11 +45,11 @@ func NewRouter() *mux.Router {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "index.html", nil)
+	utils.ExecuteTemplate(w, "index.gohtml", nil)
 }
 
 func registrationGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "registration.html", nil)
+	utils.ExecuteTemplate(w, "registration.gohtml", nil)
 }
 
 func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +66,7 @@ func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "login.html", nil)
+	utils.ExecuteTemplate(w, "login.gohtml", nil)
 }
 
 func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -70,7 +77,7 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	ok := models.UserAuthentification(username, password)
 
 	if ok != nil {
-		utils.ExecuteTemplate(w, "login.html", utils.ErrorInvalidLogin)
+		utils.ExecuteTemplate(w, "login.gohtml", apperrors.ErrorRoutesInvalidLogin)
 	}
 
 	session, _ := sessions.Store.Get(r, "session")
@@ -78,6 +85,57 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	session.Save(r, w)
 
 	http.Redirect(w, r, "/"+username, 302)
+}
+
+func logoutGETHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := sessions.Store.Get(r, "session")
+	delete(session.Values, "username")
+	session.Save(r, w)
+	http.Redirect(w, r, "/login", 302)
+}
+
+func bugtypeGETHandler(w http.ResponseWriter, r *http.Request) {
+	utils.ExecuteTemplate(w, "createbugs.gohtml", nil)
+}
+
+func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
+	/* r.ParseForm()
+	username := r.PostForm.Get("username")
+	password := r.PostForm.Get("password")
+
+	ok := models.UserAuthentification(username, password)
+
+	if ok != nil {
+		utils.ExecuteTemplate(w, "login.gohtml", apperrors.ErrorRoutesInvalidLogin)
+	}
+
+	session, _ := sessions.Store.Get(r, "session")
+	session.Values["username"] = username
+	session.Save(r, w)
+
+	http.Redirect(w, r, "/"+username, 302) */
+}
+
+func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
+	utils.ExecuteTemplate(w, "tickets.gohtml", nil)
+}
+
+func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
+	/* r.ParseForm()
+	username := r.PostForm.Get("username")
+	password := r.PostForm.Get("password")
+
+	ok := models.UserAuthentification(username, password)
+
+	if ok != nil {
+		utils.ExecuteTemplate(w, "login.gohtml", apperrors.ErrorRoutesInvalidLogin)
+	}
+
+	session, _ := sessions.Store.Get(r, "session")
+	session.Values["username"] = username
+	session.Save(r, w)
+
+	http.Redirect(w, r, "/"+username, 302) */
 }
 
 func profileGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -98,18 +156,14 @@ func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(ok)
 		http.Redirect(w, r, "/login", 302)
 	}
-	user := models.GetUserInformations(currentUser.(string))
+	user, err := models.UserGetAllInformations(currentUser.(string))
+	if err != nil {
+		log.Println(err)
+	}
 
-	utils.ExecuteTemplate(w, "profile.html", struct {
+	utils.ExecuteTemplate(w, "profile.gohtml", struct {
 		User *models.User
 	}{
 		User: user,
 	})
-}
-
-func logoutGETHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
-	delete(session.Values, "username")
-	session.Save(r, w)
-	http.Redirect(w, r, "/login", 302)
 }

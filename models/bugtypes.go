@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"../appErrors"
+	"../apperrors"
 	"../databases"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -26,7 +26,7 @@ type BugTypes struct {
 }
 
 func test1() {
-	log.Println(appErrors.ErrorUserDoesNotExist)
+	log.Println(apperrors.ErrorUserDoesNotExist)
 }
 
 // GetBugTypeID method
@@ -63,8 +63,8 @@ func (bugtype *BugTypes) GetBugTypeUpdatedAt() string {
 func (bugtype *BugTypes) CreateNewBugType() error {
 	ok := bugtype.BugTypeExists()
 	if ok {
-		log.Println(appErrors.ErrorBugTypeAlreadyExists)
-		return appErrors.ErrorBugTypeAlreadyExists
+		log.Println(apperrors.ErrorBugTypeAlreadyExists)
+		return apperrors.ErrorBugTypeAlreadyExists
 	}
 	return nil
 }
