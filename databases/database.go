@@ -2,24 +2,25 @@ package databases
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"../utils"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var ctx = context.TODO()
 var (
-	quickCollection   *mongo.Collection
-	UserCollection    *mongo.Collection
+	// UserCollection exported MongoDB Collection
+	UserCollection *mongo.Collection
+	// BugTypeCollection exported MongoDB Collection
 	BugTypeCollection *mongo.Collection
-	TicketCollection  *mongo.Collection
-	mongoClient       *mongo.Client
+	// TicketCollection exported MongoDB Collection
+	TicketCollection *mongo.Collection
+
+	mongoClient *mongo.Client
 )
 
 // Init func
@@ -37,7 +38,7 @@ func Init() {
 	TicketCollection = mongoClient.Database("bugtracker").Collection("tickets")
 }
 
-func listDatabases() {
+/* func listDatabases() {
 	databases, err := mongoClient.ListDatabases(ctx, bson.M{})
 	if err != nil {
 		log.Fatalln(err)
@@ -53,7 +54,7 @@ func quickEntry() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-}
+} */
 
 // TestUser func
 func TestUser() {
@@ -103,7 +104,7 @@ func UserExists(username string) bool {
 	return true
 } */
 
-func quickEntryTwo() {
+/* func quickEntryTwo() {
 	_, err := quickCollection.InsertOne(ctx, bson.D{
 		{Key: "title", Value: "Monkey King"},
 		{Key: "author", Value: "Benjamin"},
@@ -169,7 +170,7 @@ func readAllDocumentsFromQuickCollectionWithIteration() {
 		}
 		fmt.Println(document)
 	}
-}
+} */
 
 /* // GetUserInformations func
 func GetUserInformations(username string) *models.User {
@@ -180,7 +181,7 @@ func GetUserInformations(username string) *models.User {
 	return &document
 } */
 
-func readOneDocument() {
+/* func readOneDocument() {
 	var document bson.M
 	if err := quickCollection.FindOne(ctx, bson.M{}).Decode(&document); err != nil {
 		log.Fatal(err)
@@ -248,7 +249,7 @@ func updatingMany() {
 	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
 }
 
-/* Replacing in MongoDB - es ist kein UPDATE, sondern ERSETZT das komplette Dokument */
+/* Replacing in MongoDB - es ist kein UPDATE, sondern ERSETZT das komplette Dokument
 func replacingInDocument() {
 	result, _ := quickCollection.ReplaceOne(
 		ctx,
@@ -281,4 +282,4 @@ func dropCollection() {
 	if err := UserCollection.Drop(ctx); err != nil {
 		log.Fatal(err)
 	}
-}
+} */

@@ -1,16 +1,15 @@
 package models
 
 import (
-	"context"
 	"log"
 
+	"../appErrors"
 	"../databases"
 	"../utils"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
-
-var ctx = context.TODO()
 
 // User struct
 type User struct {
@@ -85,7 +84,7 @@ func (user *User) CreateNewUser() {
 
 // UserExists func
 func (user *User) UserExists() bool {
-	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": user.GetUserName()}).Decode(&user); err != nil {
+	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": user.GetUserName()}); err != nil {
 		log.Fatal(err)
 		return false
 	}
@@ -103,5 +102,6 @@ func UserAuthentification(username, password string) error {
 	if user.GetUserPassword() == password {
 		return nil
 	}
-	return utils.ErrorUserDoesNotExist
+
+	return appErrors.ErrorUserDoesNotExist
 }
