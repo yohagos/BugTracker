@@ -11,8 +11,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var ctx = context.TODO()
 var (
+	ctx = context.TODO()
+
 	// UserCollection exported MongoDB Collection
 	UserCollection *mongo.Collection
 	// BugTypeCollection exported MongoDB Collection

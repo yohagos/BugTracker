@@ -19,7 +19,7 @@ func main() {
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")
-	utils.LoadTemplate("static/*.html")
+	utils.LoadTemplate("static/*.gohtml")
 
 	r := routes.NewRouter()
 	log.Println("Server starting..")

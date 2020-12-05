@@ -59,7 +59,7 @@ func (user *User) GetUserUpdatedAt() string {
 
 // CreateNewUser func
 func (user *User) CreateNewUser() {
-	ok := UserExists(user.GetUserName())
+	ok := databases.CheckUserExists(user.GetUserName())
 	if !ok {
 		log.Println("Username already exists")
 		return
@@ -74,12 +74,7 @@ func (user *User) CreateNewUser() {
 		{Key: "createdAt", Value: time},
 		{Key: "updatedAt", Value: time},
 	}
-
-	_, err := databases.UserCollection.InsertOne(ctx, userDocument)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
+	databases.CreateNewUser(userDocument)
 }
 
 // UserExists func
