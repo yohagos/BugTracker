@@ -14,6 +14,8 @@ var (
 	ErrorUserNotFound = errors.New("Username not found")
 	// ErrorInvalidLogin var
 	ErrorInvalidLogin = errors.New("Invalid login. Please try again")
+	// ErrorUserDoesNotExist var
+	ErrorUserDoesNotExist = errors.New("Login is invalid. Username / Password does not exists")
 )
 
 // InternalServerError func

@@ -15,23 +15,26 @@ import (
 
 var ctx = context.TODO()
 var (
-	quickCollection *mongo.Collection
-	UserCollection  *mongo.Collection
-	mongoClient     *mongo.Client
+	quickCollection   *mongo.Collection
+	UserCollection    *mongo.Collection
+	BugTypeCollection *mongo.Collection
+	TicketCollection  *mongo.Collection
+	mongoClient       *mongo.Client
 )
 
 // Init func
 func Init() {
 	ClientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-	client, err := mongo.Connect(ctx, ClientOptions)
+	mongoClient, err := mongo.Connect(ctx, ClientOptions)
 	utils.IsError(err)
 
-	err = client.Ping(context.TODO(), nil)
+	err = mongoClient.Ping(context.TODO(), nil)
 	utils.IsError(err)
-	mongoClient = client
-	fmt.Println("Connected to MongoDB!")
+	log.Println("Connected to MongoDB!")
 
 	UserCollection = mongoClient.Database("bugTracker").Collection("users")
+	BugTypeCollection = mongoClient.Database("bugTracker").Collection("bugtype")
+	TicketCollection = mongoClient.Database("bugtracker").Collection("tickets")
 }
 
 func listDatabases() {
@@ -66,15 +69,15 @@ func TestUser() {
 	log.Println("Created Test User !")
 }
 
-// AddNewUser func
+/* // AddNewUser func
 func AddNewUser(newUser bson.D) error {
 	result, err := UserCollection.InsertOne(ctx, newUser)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("New User added: %v\n", result.InsertedID)
+	//fmt.Printf("New User added: %v\n", result.InsertedID)
 	return nil
-}
+} */
 
 /* // UserAuthentification func
 func UserAuthentification(username, password string) error {

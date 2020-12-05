@@ -23,38 +23,50 @@ type User struct {
 	UpdatedAt string             `bson:"updatedAt,omitempty"`
 }
 
+// GetUserID func
 func (user *User) GetUserID() string {
 	return user.ID.String()
 }
 
+// GetUserName func
 func (user *User) GetUserName() string {
 	return user.Name
 }
 
+// GetUserLastname func
 func (user *User) GetUserLastname() string {
 	return user.Lastname
 }
 
+// GetUserEmail func
 func (user *User) GetUserEmail() string {
 	return user.Email
 }
 
+// GetUserPassword func
 func (user *User) GetUserPassword() string {
 	return user.Password
 }
 
+// GetUserCreatedAt func
 func (user *User) GetUserCreatedAt() string {
 	return user.CreatedAt
 }
 
+// GetUserUpdatedAt func
 func (user *User) GetUserUpdatedAt() string {
 	return user.UpdatedAt
 }
 
 // CreateNewUser func
 func (user *User) CreateNewUser() {
-	time := utils.CreateTimeStamp()
+	ok := user.UserExists()
+	if !ok {
+		log.Println("Username already exists")
+		return
+	}
 
+	time := utils.CreateTimeStamp()
 	userDocument := bson.D{
 		{Key: "name", Value: user.Name},
 		{Key: "lastname", Value: user.Lastname},
@@ -64,9 +76,14 @@ func (user *User) CreateNewUser() {
 		{Key: "updatedAt", Value: time},
 	}
 
-	databases.AddNewUser(userDocument)
+	_, err := databases.UserCollection.InsertOne(ctx, userDocument)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	//databases.AddNewUser(userDocument)
 }
 
+// UserExists func
 func (user *User) UserExists() bool {
 	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": user.GetUserName()}).Decode(&user); err != nil {
 		log.Fatal(err)
@@ -75,13 +92,16 @@ func (user *User) UserExists() bool {
 	return true
 }
 
-func UserAuthentification(username, password string) {
-	/* err := databases.UserAuthentification(username, password)
-	if err != nil {
-		log.Fatal(err)
+// UserAuthentification func
+func UserAuthentification(username, password string) error {
+	var user User
+	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
+		log.Println(err)
 		return err
 	}
-	return nil */
 
-	// UserAuth muss noch angepasst werden
+	if user.GetUserPassword() == password {
+		return nil
+	}
+	return utils.ErrorUserDoesNotExist
 }
