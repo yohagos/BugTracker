@@ -3,7 +3,6 @@ package models
 import (
 	"log"
 
-	"../apperrors"
 	"../databases"
 	"../utils"
 
@@ -79,34 +78,24 @@ func (user *User) CreateNewUser() {
 
 // UserExists func
 func UserExists(username string) bool {
-	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": username}); err != nil {
-		log.Fatal(err)
-		return false
-	}
-	return true
+	return databases.CheckUserExists(username)
 }
 
 // UserAuthentification func
 func UserAuthentification(username, password string) error {
-	var user User
-	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
-		log.Println(err)
-		return err
-	}
-
-	if user.GetUserPassword() == password {
-		return nil
-	}
-
-	return apperrors.ErrorUserDoesNotExist
+	err := databases.AuthentificationUser(username, password)
+	return err
 }
 
 // UserGetAllInformations func
-func UserGetAllInformations(username string) (*User, error) {
+/* func UserGetAllInformations(username string) (*User, error) {
 	var result *User
-	if err := databases.UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&result); err != nil {
-		log.Println(err)
+
+
+	result, err := databases.GetAllUserInformations(result, username)
+	if err != nil {
 		return nil, err
 	}
+
 	return result, nil
-}
+} */

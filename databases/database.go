@@ -39,6 +39,14 @@ func Init() {
 	TicketCollection = mongoClient.Database("bugtracker").Collection("tickets")
 }
 
+/* func BsonToMapConvertor(document bson.M) map[string]string {
+	var user map[string]string
+	for _, v := range document {
+		user = append(v, user)
+	}
+	return user
+} */
+
 /* func listDatabases() {
 	databases, err := mongoClient.ListDatabases(ctx, bson.M{})
 	if err != nil {
@@ -57,13 +65,27 @@ func quickEntry() {
 	}
 } */
 
+/* func TestBsonToMap() {
+	var b bson.M
+	if err := UserCollection.FindOne(ctx, bson.M{"email": "yosef.hagos@googlemail.com"}).Decode(&b); err != nil {
+		log.Fatal(err)
+	}
+	//var m map[string]string
+	for _, v := range b {
+		log.Println(v)
+	}
+} */
+
 // TestUser func
 func TestUser() {
+	time := utils.CreateTimeStamp()
 	_, err := UserCollection.InsertOne(ctx, bson.D{
 		{Key: "name", Value: "Yosef"},
 		{Key: "lastname", Value: "Hagos"},
 		{Key: "email", Value: "yosef.hagos@googlemail.com"},
 		{Key: "password", Value: "12345"},
+		{Key: "createdAt", Value: time},
+		{Key: "updatedAt", Value: time},
 	})
 	if err != nil {
 		log.Fatalln(err)

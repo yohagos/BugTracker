@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"./databases"
 	"./routes"
@@ -14,8 +15,9 @@ func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
 
-	//databases.TestUser()
-
+	databases.TestUser()
+	databases.TestBsonToMap()
+	os.Exit(3)
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")

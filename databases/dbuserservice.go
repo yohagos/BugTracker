@@ -2,6 +2,9 @@ package databases
 
 import (
 	"log"
+	"strings"
+
+	"../apperrors"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -21,3 +24,28 @@ func CreateNewUser(user bson.D) {
 		log.Println(err)
 	}
 }
+
+// AuthentificationUser func
+func AuthentificationUser(username, password string) error {
+	var result bson.M
+	if err := UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&result); err != nil {
+		log.Println(err)
+		return err
+	}
+
+	for _, v := range result {
+		if strings.Contains(v.(string), password) {
+			return nil
+		}
+	}
+
+	return apperrors.ErrorUserDoesNotExist
+}
+
+/* func GetAllUserInformations(user *User, username string) (*User, error) {
+	if err := UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
+		log.Fatal(err)
+		return nil, apperrors.ErrorUserDoesNotExist
+	}
+	return user, nil
+} */
