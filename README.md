@@ -3,14 +3,10 @@
 Dieses Projekt wurde aufgesetzt, damit ich meine Go Kenntnisse und Erfahrungen erweiteren bzw. vertiefen kann. Hierzu entschloss ich mich MongoDB als Datenbank zu verwenden, um somit eine weitere NoSQL basierende Datenbank meinen Erfahrungen und Kenntnissen hinzu zu fügen. Desweiteren möchte ich ebenfalls meine Docker Kenntnisse und Erfahrungen erweitern und möchte diese Applikation anschließend auch als Docker Image bereitstellen.
 
 Diese Applikation soll es seinen Nutzern die folgenden Funktionen bereitstellen:
-- Account erstellen
-Ein User muss seine Daten (bspw. Name, Email, etc.) eingeben und registrieren.
-- Einloggen
-Durch Eingabe der Email Adresse und Passwort sich einloggen.
-- Kategorien von Tickets zu definieren
-Es soll ermöglicht werden kundenspezifische Kategorien (bspw. Bugs, Defects, etc.) zu erstellen. 
-- Tickets zu erstellen
-Tickets sollen erstellt werden können, in denen Kategorien ausgewählt werden können und zusätzliche Informationen (bspw. Ticket ID, Zuständiger, Status, etc.) hinzugefügt werden können.
+- Account erstellen: Ein User muss seine Daten (bspw. Name, Email, etc.) eingeben und registrieren.
+- Einloggen: Durch Eingabe der Email Adresse und Passwort sich einloggen.
+- Kategorien von Tickets zu definieren: Es soll ermöglicht werden kundenspezifische Kategorien (bspw. Bugs, Defects, etc.) zu erstellen. 
+- Tickets zu erstellen: Tickets sollen erstellt werden können, in denen Kategorien ausgewählt werden können und zusätzliche Informationen (bspw. Ticket ID, Zuständiger, Status, etc.) hinzugefügt werden können.
 
 Das Projekt soll zum nächstmöglichen Zeitpunkt, sobald ein funktionstüchtiger Stand (Prototype) erreicht wurde, ein Docker Image gebaut und zum testen bereitgestellt werden.
 
