@@ -42,6 +42,16 @@ func AuthentificationUser(username, password string) error {
 	return apperrors.ErrorUserDoesNotExist
 }
 
+// GetAllUserInformations func
+func GetAllUserInformations(email string) (bson.M, error) {
+	var result bson.M
+	if err := UserCollection.FindOne(ctx, bson.M{"email": email}).Decode(&result); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return result, nil
+}
+
 /* func GetAllUserInformations(user *User, username string) (*User, error) {
 	if err := UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
 		log.Fatal(err)

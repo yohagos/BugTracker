@@ -6,6 +6,7 @@ import (
 
 	"../apperrors"
 	"../databases"
+	"../utils"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -23,10 +24,6 @@ type BugTypes struct {
 	Name        string             `bson:"name,omitempty"`
 	CreatedAt   string             `bson:"createdAt,omitempty"`
 	UpdatedAt   string             `bson:"updatedAt,omitempty"`
-}
-
-func test1() {
-	log.Println(apperrors.ErrorUserDoesNotExist)
 }
 
 // GetBugTypeID method
@@ -76,4 +73,17 @@ func (bugtype *BugTypes) BugTypeExists() bool {
 		return false
 	}
 	return true
+}
+
+// TestCreateNewBugType func
+func TestCreateNewBugType() {
+	time := utils.CreateTimeStamp()
+	bugTypeDocument := bson.D{
+		{Key: "description", Value: "Bugs were found which should be fixed before the next release."},
+		{Key: "acronym", Value: "BUG"},
+		{Key: "name", Value: "Bugs"},
+		{Key: "createdAt", Value: time},
+		{Key: "updatedAt", Value: time},
+	}
+	databases.CreateNewBugType(bugTypeDocument)
 }

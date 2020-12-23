@@ -88,14 +88,28 @@ func UserAuthentification(username, password string) error {
 }
 
 // UserGetAllInformations func
-/* func UserGetAllInformations(username string) (*User, error) {
-	var result *User
-
-
-	result, err := databases.GetAllUserInformations(result, username)
+func UserGetAllInformations(username string) (*User, error) {
+	//var user *User
+	result, err := databases.GetAllUserInformations(username)
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
+	user, _ := bson.Marshal(result)
+	log.Println(user)
+	return nil, nil
+}
 
-	return result, nil
-} */
+// TestCreateUser func
+func TestCreateUser() {
+	timestamp := utils.CreateTimeStamp()
+	userDocument := bson.D{
+		{Key: "name", Value: "user.Name"},
+		{Key: "lastname", Value: "user.Lastname"},
+		{Key: "email", Value: "user.Email"},
+		{Key: "password", Value: "user.Password"},
+		{Key: "createdAt", Value: timestamp},
+		{Key: "updatedAt", Value: timestamp},
+	}
+	databases.CreateNewUser(userDocument)
+}

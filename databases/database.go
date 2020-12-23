@@ -6,7 +6,6 @@ import (
 
 	"../utils"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -35,8 +34,11 @@ func Init() {
 	log.Println("Connected to MongoDB!")
 
 	UserCollection = mongoClient.Database("bugTracker").Collection("users")
+
 	BugTypeCollection = mongoClient.Database("bugTracker").Collection("bugtype")
-	TicketCollection = mongoClient.Database("bugtracker").Collection("tickets")
+
+	TicketCollection = mongoClient.Database("bugTracker").Collection("tickets")
+
 }
 
 /* func BsonToMapConvertor(document bson.M) map[string]string {
@@ -76,7 +78,7 @@ func quickEntry() {
 	}
 } */
 
-// TestUser func
+/* // TestUser func
 func TestUser() {
 	time := utils.CreateTimeStamp()
 	_, err := UserCollection.InsertOne(ctx, bson.D{
@@ -91,7 +93,7 @@ func TestUser() {
 		log.Fatalln(err)
 	}
 	log.Println("Created Test User !")
-}
+} */
 
 /* // AddNewUser func
 func AddNewUser(newUser bson.D) error {

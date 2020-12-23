@@ -1,8 +1,10 @@
 package models
 
 import (
-	"log"
+	"../databases"
+	"../utils"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -15,6 +17,21 @@ type Tickets struct {
 	Status    string             `bson:"status,omitempty"`
 	CreatedAt string             `bson:"createdAt,omitempty"`
 	UpdatedAt string             `bson:"updatedAt,omitempty"`
+}
+
+// TestCreateTicket func
+func TestCreateTicket() {
+	timestamp := utils.CreateTimeStamp()
+	ticketDocument := bson.D{
+		{Key: "name", Value: "test"},
+		{Key: "createdby", Value: "test01"},
+		{Key: "bugtype", Value: "bug"},
+		{Key: "status", Value: "testing"},
+		{Key: "createdAt", Value: timestamp},
+		{Key: "updatedAt", Value: timestamp},
+	}
+
+	databases.CreateNewTicket(ticketDocument)
 }
 
 // GetTicketID func
@@ -50,8 +67,4 @@ func (ticket *Tickets) GetTicketUpdatedAt() string {
 // GetTicketCreatedAt func
 func (ticket *Tickets) GetTicketCreatedAt() string {
 	return ticket.CreatedAt
-}
-
-func test() {
-	log.Println()
 }

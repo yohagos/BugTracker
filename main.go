@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"./databases"
+	"./models"
 	"./routes"
 	"./sessions"
 	"./utils"
@@ -15,9 +16,13 @@ func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
 
-	databases.TestUser()
-	databases.TestBsonToMap()
+	models.TestCreateUser()
+
+	models.TestCreateNewBugType()
+
+	models.TestCreateTicket()
 	os.Exit(3)
+
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")
