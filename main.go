@@ -3,10 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"./databases"
-	"./models"
 	"./routes"
 	"./sessions"
 	"./utils"
@@ -16,17 +14,17 @@ func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
 
-	models.TestCreateUser()
+	/* models.TestCreateUser()
 
 	models.TestCreateNewBugType()
 
 	models.TestCreateTicket()
-	os.Exit(3)
+	os.Exit(3) */
 
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")
-	utils.LoadTemplate("static/*.gohtml")
+	utils.LoadTemplate("static/*.html")
 
 	r := routes.NewRouter()
 	log.Println("Server starting..")

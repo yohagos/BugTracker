@@ -41,6 +41,8 @@ func NewRouter() *mux.Router {
 	fs := http.FileServer(http.Dir("../static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
+	router.NotFoundHandler = router.NewRoute().HandlerFunc(pageNotFoundHandler).GetHandler()
+
 	return router
 }
 
@@ -165,5 +167,13 @@ func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 		User *models.User
 	}{
 		User: user,
+	})
+}
+
+func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	utils.ExecuteTemplate(w, "error.html", struct {
+		Error error
+	}{
+		Error: apperrors.ErrorRoutesPageNotFound,
 	})
 }

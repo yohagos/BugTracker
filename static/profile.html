@@ -2,23 +2,24 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Index</title>
+        <title>Profile</title>
+        <link rel="stylesheet" href="./css/style.css">
     </head>
 
     <body>
         <!-- NAV -->
         <section class="navbar">
             <nav>
-                <a href="/registration">Sign Up</a>
-                <a href="/login">Sign In</a>
+                
+                <a href="/logout">Logout</a>
             </nav>
         </section>
 
         <!-- MAIN -->
         <section class="main">
+            
             <br>
-            <br>
-            <h1>Bugtracker</h1>
+            <h1>Hello {{ .User.GetUserName }}</h1>
             <!-- <ul>
                 {{ range .Users }}
                     <li>{{ .Users.GetUserName }}</li>
@@ -27,5 +28,8 @@
         </section>
 
         <!-- FOOTER -->
+        <section class="footer">
+
+        </section>
     </body>
 </html>

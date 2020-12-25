@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Error</title>
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
+
+    <body>
+        <!-- NAV -->
+        <section class="navbar">
+            <nav>
+                <a href="/index">Home</a>
+                <a href="/registration">Sign Up</a>
+                <a href="/login">Sign In</a>
+            </nav>
+        </section>
+
+        <!-- MAIN -->
+        <section class="main">
+            <h1>Error occurred</h1>
+
+            {{ .Error }}
+            <!-- <ul>
+                {{ range .Users }}
+                    <li>{{ .Users.GetUserName }}</li>
+                {{ end }}
+            </ul> -->
+        </section>
+
+        <!-- FOOTER -->
+    </body>
+</html>
