@@ -87,3 +87,12 @@ func TestCreateNewBugType() {
 	}
 	databases.CreateNewBugType(bugTypeDocument)
 }
+
+// NewBugTypeExists method
+func NewBugTypeExists(acronym string) error {
+	if err := databases.BugTypeCollection.FindOne(ctx, bson.M{"acronym": acronym}); err != nil {
+		log.Println(err)
+		return apperrors.ErrorBugTypeAlreadyExists
+	}
+	return nil
+}

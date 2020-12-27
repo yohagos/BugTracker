@@ -16,10 +16,19 @@
 
     <!-- MAIN -->
     <section class="main">
-      <br />
+      <br>
+        {{ if . }}
+            <div class="error"> {{ . }}</div>
+        {{ end }}
+      <br>
       <h1>Create new Bugs</h1>
 
-      <form method="post"></form>
+      <form method="post">
+        <input type="text" name="acronym" id="bugtypeAcronym">
+        <input type="text" name="name" id="bugtypeName">
+        <textarea name="description" id="bugtypeDescription" cols="40" rows="20"></textarea>
+        <button type="submit">Add new Bugtype</button>
+      </form>
     </section>
 
     <!-- FOOTER -->

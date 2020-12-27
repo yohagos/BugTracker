@@ -6,6 +6,8 @@ import (
 )
 
 var (
+	// ErrorSessionInvalid var
+	ErrorSessionInvalid = errors.New("Current Session is invalid. Please login first")
 
 	// ErrorRoutesPageNotFound var
 	ErrorRoutesPageNotFound = errors.New("Page does not exist. Please try again")

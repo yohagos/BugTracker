@@ -1,6 +1,7 @@
 package models
 
 import (
+	"../apperrors"
 	"../databases"
 	"../utils"
 
@@ -67,4 +68,9 @@ func (ticket *Tickets) GetTicketUpdatedAt() string {
 // GetTicketCreatedAt func
 func (ticket *Tickets) GetTicketCreatedAt() string {
 	return ticket.CreatedAt
+}
+
+// NewTicketExists func
+func NewTicketExists(name string) error {
+	return apperrors.ErrorBugTypeAlreadyExists
 }
