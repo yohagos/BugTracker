@@ -13,3 +13,11 @@ func CreateNewTicket(ticket bson.D) {
 		log.Println(err)
 	}
 }
+
+// CheckTicketExists func
+func CheckTicketExists(name string) bool {
+	if err := TicketCollection.FindOne(ctx, bson.M{"name": name}); err != nil {
+		return false
+	}
+	return true
+}

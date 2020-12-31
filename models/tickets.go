@@ -1,6 +1,8 @@
 package models
 
 import (
+	"log"
+
 	"../apperrors"
 	"../databases"
 	"../utils"
@@ -68,6 +70,50 @@ func (ticket *Tickets) GetTicketUpdatedAt() string {
 // GetTicketCreatedAt func
 func (ticket *Tickets) GetTicketCreatedAt() string {
 	return ticket.CreatedAt
+}
+
+func (ticket *Tickets) setTicketName(tic string) {
+	ticket.Name = tic
+}
+
+func (ticket *Tickets) setTicketCreatedBy(tic string) {
+	ticket.CreatedBy = tic
+}
+
+func (ticket *Tickets) setTicketBugType(tic string) {
+	ticket.BugType = tic
+}
+
+func (ticket *Tickets) setTicketStatus(tic string) {
+	ticket.Status = tic
+}
+
+func (ticket *Tickets) setTicketUpdatedAt(tic string) {
+	ticket.UpdatedAt = tic
+}
+
+func (ticket *Tickets) setTicketCreatedAt(tic string) {
+	ticket.CreatedAt = tic
+}
+
+// CreateNewTicket func
+func (ticket *Tickets) CreateNewTicket() {
+	ok := databases.CheckTicketExists(ticket.GetTicketName())
+	if !ok {
+		log.Println("Ticket already exists")
+		return
+	}
+
+	timeStamp := utils.CreateTimeStamp()
+	ticketDocument := bson.D{
+		{Key: "name", Value: ticket.GetTicketName()},
+		{Key: "createdby", Value: ticket.GetTicketCreatedBy()},
+		{Key: "bugtype", Value: ticket.GetTicketBugType()},
+		{Key: "status", Value: ticket.GetTicketStatus},
+		{Key: "createdAt", Value: timeStamp},
+		{Key: "updatedAt", Value: timeStamp},
+	}
+	databases.CreateNewTicket(ticketDocument)
 }
 
 // NewTicketExists func

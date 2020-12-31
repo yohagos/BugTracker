@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 
 	"../databases"
@@ -56,6 +57,30 @@ func (user *User) GetUserUpdatedAt() string {
 	return user.UpdatedAt
 }
 
+func (user *User) setUserEmail(str string) {
+	user.Email = str
+}
+
+func (user *User) setUserName(str string) {
+	user.Name = str
+}
+
+func (user *User) setUserLastname(str string) {
+	user.Lastname = str
+}
+
+func (user *User) setUserPassword(str string) {
+	user.Password = str
+}
+
+func (user *User) setUserCreatedAt(str string) {
+	user.CreatedAt = str
+}
+
+func (user *User) setUserUpdatedAt(str string) {
+	user.UpdatedAt = str
+}
+
 // CreateNewUser func
 func (user *User) CreateNewUser() {
 	ok := databases.CheckUserExists(user.GetUserName())
@@ -88,26 +113,52 @@ func UserAuthentification(username, password string) error {
 }
 
 // UserGetAllInformations func
-func UserGetAllInformations(username string) (*User, error) {
-	//var user *User
+func UserGetAllInformations(username string) (User, error) {
+	var user User
+
 	result, err := databases.GetAllUserInformations(username)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return user, err
 	}
-	user, _ := bson.Marshal(result)
-	log.Println(user)
-	return nil, nil
+
+	for k, v := range result {
+		log.Println("Loop - v ", v)
+		switch k {
+		case "name":
+			key := fmt.Sprintf("%v", v)
+			user.setUserName(key)
+		case "lastname":
+			key := fmt.Sprintf("%v", v)
+			user.setUserLastname(key)
+		case "email":
+			key := fmt.Sprintf("%v", v)
+			user.setUserEmail(key)
+		case "password":
+			key := fmt.Sprintf("%v", v)
+			user.setUserPassword(key)
+		case "createdAt":
+			key := fmt.Sprintf("%v", v)
+			user.setUserCreatedAt(key)
+		case "updatedAt":
+			key := fmt.Sprintf("%v", v)
+			user.setUserUpdatedAt(key)
+		default:
+			log.Println("-----")
+		}
+	}
+
+	return user, nil
 }
 
 // TestCreateUser func
 func TestCreateUser() {
 	timestamp := utils.CreateTimeStamp()
 	userDocument := bson.D{
-		{Key: "name", Value: "user.Name"},
-		{Key: "lastname", Value: "user.Lastname"},
-		{Key: "email", Value: "user.Email"},
-		{Key: "password", Value: "user.Password"},
+		{Key: "name", Value: "Yosef"},
+		{Key: "lastname", Value: "Hagos"},
+		{Key: "email", Value: "test@test.com"},
+		{Key: "password", Value: "123456"},
 		{Key: "createdAt", Value: timestamp},
 		{Key: "updatedAt", Value: timestamp},
 	}

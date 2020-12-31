@@ -12,5 +12,12 @@ func CreateNewBugType(bugtype bson.D) {
 	if err != nil {
 		log.Println(err)
 	}
+}
 
+// CheckBugTypeExists func
+func CheckBugTypeExists(acronym string) bool {
+	if err := BugTypeCollection.FindOne(ctx, bson.M{"acronym": acronym}); err != nil {
+		return false
+	}
+	return true
 }

@@ -58,7 +58,7 @@ func (bugtype *BugTypes) GetBugTypeUpdatedAt() string {
 
 // CreateNewBugType method
 func (bugtype *BugTypes) CreateNewBugType() error {
-	ok := bugtype.BugTypeExists()
+	ok := BugTypeExists(bugtype.GetBugTypeAcronym())
 	if ok {
 		log.Println(apperrors.ErrorBugTypeAlreadyExists)
 		return apperrors.ErrorBugTypeAlreadyExists
@@ -66,13 +66,29 @@ func (bugtype *BugTypes) CreateNewBugType() error {
 	return nil
 }
 
+func (bugtype *BugTypes) setBugTypeDescription(bt string) {
+	bugtype.Description = bt
+}
+
+func (bugtype *BugTypes) setBugTypeAcronym(bt string) {
+	bugtype.Acronym = bt
+}
+
+func (bugtype *BugTypes) setBugTypeName(bt string) {
+	bugtype.Name = bt
+}
+
+func (bugtype *BugTypes) setBugTypeCreatedAt(bt string) {
+	bugtype.CreatedAt = bt
+}
+
+func (bugtype *BugTypes) setBugTypeUpdatedAt(bt string) {
+	bugtype.UpdatedAt = bt
+}
+
 // BugTypeExists method
-func (bugtype *BugTypes) BugTypeExists() bool {
-	if err := databases.BugTypeCollection.FindOne(ctx, bson.M{"acronym": bugtype.GetBugTypeAcronym()}); err != nil {
-		log.Fatalln(err)
-		return false
-	}
-	return true
+func BugTypeExists(acronym string) bool {
+	return databases.CheckBugTypeExists(acronym)
 }
 
 // TestCreateNewBugType func

@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"./databases"
 	"./models"
@@ -17,10 +18,12 @@ func main() {
 
 	models.TestCreateUser()
 
+	models.UserGetAllInformations("test@test.com")
+
 	models.TestCreateNewBugType()
 
 	models.TestCreateTicket()
-	/* os.Exit(3) */
+	os.Exit(3)
 
 	sessions.SessionInit()
 
