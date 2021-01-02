@@ -18,6 +18,12 @@
 
         <!-- MAIN -->
         <main class="main">
+            <br>
+            {{ if . }}
+                <div class="error"> {{ . }}</div>
+            {{ end }}
+            <br>
+            
             <form method="post">
                 <input type="text" name="username" id="user" placeholder="Username">
                 <input type="text" name="password" id="passwd" placeholder="Password">

@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"../apperrors"
@@ -56,9 +57,29 @@ func (bugtype *BugTypes) GetBugTypeUpdatedAt() string {
 	return bugtype.UpdatedAt
 }
 
+func (bugtype *BugTypes) setBugTypeDescription(bt string) {
+	bugtype.Description = bt
+}
+
+func (bugtype *BugTypes) setBugTypeAcronym(bt string) {
+	bugtype.Acronym = bt
+}
+
+func (bugtype *BugTypes) setBugTypeName(bt string) {
+	bugtype.Name = bt
+}
+
+func (bugtype *BugTypes) setBugTypeCreatedAt(bt string) {
+	bugtype.CreatedAt = bt
+}
+
+func (bugtype *BugTypes) setBugTypeUpdatedAt(bt string) {
+	bugtype.UpdatedAt = bt
+}
+
 // CreateNewBugType method
 func (bugtype *BugTypes) CreateNewBugType() error {
-	ok := bugtype.BugTypeExists()
+	ok := BugTypeExists(bugtype.GetBugTypeAcronym())
 	if ok {
 		log.Println(apperrors.ErrorBugTypeAlreadyExists)
 		return apperrors.ErrorBugTypeAlreadyExists
@@ -67,12 +88,8 @@ func (bugtype *BugTypes) CreateNewBugType() error {
 }
 
 // BugTypeExists method
-func (bugtype *BugTypes) BugTypeExists() bool {
-	if err := databases.BugTypeCollection.FindOne(ctx, bson.M{"acronym": bugtype.GetBugTypeAcronym()}); err != nil {
-		log.Fatalln(err)
-		return false
-	}
-	return true
+func BugTypeExists(acronym string) bool {
+	return databases.CheckBugTypeExists(acronym)
 }
 
 // TestCreateNewBugType func
@@ -86,4 +103,47 @@ func TestCreateNewBugType() {
 		{Key: "updatedAt", Value: time},
 	}
 	databases.CreateNewBugType(bugTypeDocument)
+}
+
+// NewBugTypeExists method
+func NewBugTypeExists(acronym string) error {
+	if err := databases.BugTypeCollection.FindOne(ctx, bson.M{"acronym": acronym}); err != nil {
+		log.Println(err)
+		return apperrors.ErrorBugTypeAlreadyExists
+	}
+	return nil
+}
+
+// BugTypeGetAllInformations func
+func BugTypeGetAllInformations(acronym string) (BugTypes, error) {
+	var bugtype BugTypes
+
+	result, err := databases.GetAllBugTypeInformations(acronym)
+	if err != nil {
+		log.Println(err)
+		return bugtype, err
+	}
+
+	for k, v := range result {
+		switch k {
+		case "acronym":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeAcronym(key)
+		case "description":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeDescription(key)
+		case "name":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeName(key)
+		case "createdAt":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeCreatedAt(key)
+		case "updatedAt":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeUpdatedAt(key)
+		default:
+
+		}
+	}
+	return bugtype, nil
 }

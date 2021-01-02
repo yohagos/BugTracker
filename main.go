@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"./databases"
-	"./models"
 	"./routes"
 	"./sessions"
 	"./utils"
@@ -15,12 +14,14 @@ func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
 
-	models.TestCreateUser()
-
+	/* models.TestCreateUser()
 	models.TestCreateNewBugType()
-
 	models.TestCreateTicket()
-	/* os.Exit(3) */
+
+	log.Println(models.UserGetAllInformations("test@test.com"))
+	log.Println(models.TicketGetAllInformations("test"))
+	log.Println(models.BugTypeGetAllInformations("BUG"))
+	os.Exit(3) */
 
 	sessions.SessionInit()
 

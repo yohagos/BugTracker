@@ -2,6 +2,8 @@ package utils
 
 import (
 	"math/rand"
+	"strconv"
+	"time"
 )
 
 // RandomKey func
@@ -18,4 +20,16 @@ func RandomKey() string {
 
 	result = string(byteSlice)
 	return result
+}
+
+// RandomFiveDigitNumber func
+func RandomFiveDigitNumber() string {
+	rand.Seed(time.Now().UnixNano())
+
+	min := 10000
+	max := 99999
+
+	randomInt := rand.Intn(max-min) + min
+	return strconv.Itoa(randomInt)
+
 }

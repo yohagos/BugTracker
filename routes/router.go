@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"../apperrors"
 	"../middleware"
@@ -28,11 +29,11 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/login", loginGETHandler).Methods("GET")
 	router.HandleFunc("/login", loginPOSTHandler).Methods("POST")
 
-	router.HandleFunc("/login", bugtypeGETHandler).Methods("GET")
-	router.HandleFunc("/login", bugtypePOSTHandler).Methods("POST")
+	router.HandleFunc("/bugtype", bugtypeGETHandler).Methods("GET")
+	router.HandleFunc("/bugtype", bugtypePOSTHandler).Methods("POST")
 
-	router.HandleFunc("/login", ticketsGETHandler).Methods("GET")
-	router.HandleFunc("/login", ticketsPOSTHandler).Methods("POST")
+	router.HandleFunc("/ticket", ticketsGETHandler).Methods("GET")
+	router.HandleFunc("/ticket", ticketsPOSTHandler).Methods("POST")
 
 	router.HandleFunc("/logout", logoutGETHandler).Methods("GET")
 
@@ -101,21 +102,33 @@ func bugtypeGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
-	/* r.ParseForm()
-	username := r.PostForm.Get("username")
-	password := r.PostForm.Get("password")
+	sessionKey := CheckCurrentSession(r)
+	if sessionKey == "" {
+		utils.ExecuteTemplate(w, "bugtypes.html", apperrors.ErrorSessionInvalid)
+		time.Sleep(15 * time.Second)
+		http.Redirect(w, r, "/", 303)
+	}
+	r.ParseForm()
 
-	ok := models.UserAuthentification(username, password)
+	bugtypeAcronym := r.PostForm.Get("acronym")
+	bugtypeName := r.PostForm.Get("name")
+	bugtypeDescription := r.PostForm.Get("description")
+
+	ok := models.NewBugTypeExists(bugtypeAcronym)
 
 	if ok != nil {
-		utils.ExecuteTemplate(w, "login.gohtml", apperrors.ErrorRoutesInvalidLogin)
+		utils.ExecuteTemplate(w, "bugtypes.html", ok)
 	}
 
-	session, _ := sessions.Store.Get(r, "session")
-	session.Values["username"] = username
-	session.Save(r, w)
+	var newBugType models.BugTypes
+	newBugType.Acronym = bugtypeAcronym
+	newBugType.Name = bugtypeName
+	newBugType.Description = bugtypeDescription
 
-	http.Redirect(w, r, "/"+username, 302) */
+	newBugType.CreateNewBugType()
+
+	SaveCurrentSession(w, r, sessionKey)
+	http.Redirect(w, r, "/bugtype", 302)
 }
 
 func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -123,7 +136,13 @@ func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
-	/* r.ParseForm()
+	sessionKey := CheckCurrentSession(r)
+	if sessionKey == "" {
+		utils.ExecuteTemplate(w, "tickets.html", apperrors.ErrorSessionInvalid)
+		time.Sleep(15 * time.Second)
+		http.Redirect(w, r, "/", 303)
+	}
+	r.ParseForm()
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
 
@@ -137,7 +156,7 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	session.Values["username"] = username
 	session.Save(r, w)
 
-	http.Redirect(w, r, "/"+username, 302) */
+	http.Redirect(w, r, "/"+username, 302)
 }
 
 func profileGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -164,7 +183,7 @@ func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ExecuteTemplate(w, "profile.gohtml", struct {
-		User *models.User
+		User models.User
 	}{
 		User: user,
 	})
@@ -176,4 +195,26 @@ func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	}{
 		Error: apperrors.ErrorRoutesPageNotFound,
 	})
+}
+
+// CheckCurrentSession func
+func CheckCurrentSession(r *http.Request) string {
+	session, _ := sessions.Store.Get(r, "session")
+	key := session.Values["username"]
+	exists := models.UserExists(key.(string))
+	if exists {
+		return key.(string)
+	}
+	return ""
+}
+
+// SaveCurrentSession func
+func SaveCurrentSession(w http.ResponseWriter, r *http.Request, key string) error {
+	session, _ := sessions.Store.Get(r, "session")
+	session.Values["username"] = key
+	err := session.Save(r, w)
+	if err != nil {
+		return err
+	}
+	return nil
 }
