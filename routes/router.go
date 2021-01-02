@@ -39,20 +39,17 @@ func NewRouter() *mux.Router {
 
 	router.HandleFunc("/{profile}", middleware.AuthRequired(profileGETHandler)).Methods("GET")
 
-	fs := http.FileServer(http.Dir("../static/"))
-	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
-
 	router.NotFoundHandler = router.NewRoute().HandlerFunc(pageNotFoundHandler).GetHandler()
 
 	return router
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "index.gohtml", nil)
+	utils.ExecuteTemplate(w, "index.html", nil)
 }
 
 func registrationGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "registration.gohtml", nil)
+	utils.ExecuteTemplate(w, "registration.html", nil)
 }
 
 func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +66,7 @@ func registrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "login.gohtml", nil)
+	utils.ExecuteTemplate(w, "login.html", nil)
 }
 
 func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +77,7 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	ok := models.UserAuthentification(username, password)
 
 	if ok != nil {
-		utils.ExecuteTemplate(w, "login.gohtml", apperrors.ErrorRoutesInvalidLogin)
+		utils.ExecuteTemplate(w, "login.html", apperrors.ErrorRoutesInvalidLogin)
 	}
 
 	session, _ := sessions.Store.Get(r, "session")
@@ -98,7 +95,7 @@ func logoutGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func bugtypeGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "createbugs.gohtml", nil)
+	utils.ExecuteTemplate(w, "createbugs.html", nil)
 }
 
 func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -132,7 +129,7 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "tickets.gohtml", nil)
+	utils.ExecuteTemplate(w, "tickets.html", nil)
 }
 
 func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -182,7 +179,7 @@ func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	utils.ExecuteTemplate(w, "profile.gohtml", struct {
+	utils.ExecuteTemplate(w, "profile.html", struct {
 		User models.User
 	}{
 		User: user,

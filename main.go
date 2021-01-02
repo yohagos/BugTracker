@@ -26,9 +26,12 @@ func main() {
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")
-	utils.LoadTemplate("static/*.html")
+	utils.LoadTemplate("./static/*.html")
 
 	r := routes.NewRouter()
+	fs := http.FileServer(http.Dir("static/"))
+	r.PathPrefix("/static/css/").Handler(http.StripPrefix("/static/css/", fs))
+
 	log.Println("Server starting..")
 	if err := http.ListenAndServe(":8888", r); err != nil {
 		log.Fatal("Server error! Message : ", err)

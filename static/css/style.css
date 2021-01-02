@@ -1,21 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");
 
-/* :root {
-
-} */
+:root {
+  --primary-color: #4a81e6;
+}
 
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  background-color: blue;
 }
 
 body {
-    font-family: 'Lato', sans-serif;
-    color: #333;
-    line-height: 1.6;
+  font-family: "Lato", sans-serif;
+  color: #333;
+  line-height: 1.6;
 }
 
 section {
-    padding: 10px;
+  padding: 10px;
 }
