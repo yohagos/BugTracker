@@ -21,3 +21,13 @@ func CheckTicketExists(name string) bool {
 	}
 	return true
 }
+
+// GetAllTicketInformations func
+func GetAllTicketInformations(name string) (bson.M, error) {
+	var result bson.M
+	if err := TicketCollection.FindOne(ctx, bson.M{"name": name}).Decode(&result); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return result, nil
+}

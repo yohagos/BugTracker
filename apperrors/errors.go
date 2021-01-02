@@ -6,23 +6,26 @@ import (
 )
 
 var (
-	// ErrorSessionInvalid var
+	// ErrorSessionInvalid error
 	ErrorSessionInvalid = errors.New("Current Session is invalid. Please login first")
 
-	// ErrorRoutesPageNotFound var
+	// ErrorRoutesPageNotFound error
 	ErrorRoutesPageNotFound = errors.New("Page does not exist. Please try again")
-	// ErrorRoutesPageDoesntExist var
+	// ErrorRoutesPageDoesntExist error
 	ErrorRoutesPageDoesntExist = errors.New("This page does not exist")
-	// ErrorRoutesUserNotFound var
+	// ErrorRoutesUserNotFound error
 	ErrorRoutesUserNotFound = errors.New("Username not found")
-	// ErrorRoutesInvalidLogin var
+	// ErrorRoutesInvalidLogin error
 	ErrorRoutesInvalidLogin = errors.New("Invalid login. Please try again")
 
-	// ErrorUserDoesNotExist var
+	// ErrorUserDoesNotExist error
 	ErrorUserDoesNotExist = errors.New("Login is invalid. Username / Password does not exists")
 
-	// ErrorBugTypeAlreadyExists func
+	// ErrorBugTypeAlreadyExists error
 	ErrorBugTypeAlreadyExists = errors.New("BugType already exists")
+
+	// ErrorTicketAlreadyExits error
+	ErrorTicketAlreadyExits = errors.New("Ticket already exits")
 )
 
 // InternalServerError func

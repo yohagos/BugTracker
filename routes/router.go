@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"../apperrors"
 	"../middleware"
@@ -104,6 +105,8 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 	sessionKey := CheckCurrentSession(r)
 	if sessionKey == "" {
 		utils.ExecuteTemplate(w, "bugtypes.html", apperrors.ErrorSessionInvalid)
+		time.Sleep(15 * time.Second)
+		http.Redirect(w, r, "/", 303)
 	}
 	r.ParseForm()
 
@@ -133,7 +136,13 @@ func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
-	/* r.ParseForm()
+	sessionKey := CheckCurrentSession(r)
+	if sessionKey == "" {
+		utils.ExecuteTemplate(w, "tickets.html", apperrors.ErrorSessionInvalid)
+		time.Sleep(15 * time.Second)
+		http.Redirect(w, r, "/", 303)
+	}
+	r.ParseForm()
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
 
@@ -147,7 +156,7 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	session.Values["username"] = username
 	session.Save(r, w)
 
-	http.Redirect(w, r, "/"+username, 302) */
+	http.Redirect(w, r, "/"+username, 302)
 }
 
 func profileGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -174,7 +183,7 @@ func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ExecuteTemplate(w, "profile.gohtml", struct {
-		User *models.User
+		User models.User
 	}{
 		User: user,
 	})

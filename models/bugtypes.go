@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"../apperrors"
@@ -56,16 +57,6 @@ func (bugtype *BugTypes) GetBugTypeUpdatedAt() string {
 	return bugtype.UpdatedAt
 }
 
-// CreateNewBugType method
-func (bugtype *BugTypes) CreateNewBugType() error {
-	ok := BugTypeExists(bugtype.GetBugTypeAcronym())
-	if ok {
-		log.Println(apperrors.ErrorBugTypeAlreadyExists)
-		return apperrors.ErrorBugTypeAlreadyExists
-	}
-	return nil
-}
-
 func (bugtype *BugTypes) setBugTypeDescription(bt string) {
 	bugtype.Description = bt
 }
@@ -84,6 +75,16 @@ func (bugtype *BugTypes) setBugTypeCreatedAt(bt string) {
 
 func (bugtype *BugTypes) setBugTypeUpdatedAt(bt string) {
 	bugtype.UpdatedAt = bt
+}
+
+// CreateNewBugType method
+func (bugtype *BugTypes) CreateNewBugType() error {
+	ok := BugTypeExists(bugtype.GetBugTypeAcronym())
+	if ok {
+		log.Println(apperrors.ErrorBugTypeAlreadyExists)
+		return apperrors.ErrorBugTypeAlreadyExists
+	}
+	return nil
 }
 
 // BugTypeExists method
@@ -111,4 +112,38 @@ func NewBugTypeExists(acronym string) error {
 		return apperrors.ErrorBugTypeAlreadyExists
 	}
 	return nil
+}
+
+// BugTypeGetAllInformations func
+func BugTypeGetAllInformations(acronym string) (BugTypes, error) {
+	var bugtype BugTypes
+
+	result, err := databases.GetAllBugTypeInformations(acronym)
+	if err != nil {
+		log.Println(err)
+		return bugtype, err
+	}
+
+	for k, v := range result {
+		switch k {
+		case "acronym":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeAcronym(key)
+		case "description":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeDescription(key)
+		case "name":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeName(key)
+		case "createdAt":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeCreatedAt(key)
+		case "updatedAt":
+			key := fmt.Sprintf("%v", v)
+			bugtype.setBugTypeUpdatedAt(key)
+		default:
+
+		}
+	}
+	return bugtype, nil
 }

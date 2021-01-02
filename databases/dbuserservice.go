@@ -51,11 +51,3 @@ func GetAllUserInformations(email string) (bson.M, error) {
 	}
 	return result, nil
 }
-
-/* func GetAllUserInformations(user *User, username string) (*User, error) {
-	if err := UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&user); err != nil {
-		log.Fatal(err)
-		return nil, apperrors.ErrorUserDoesNotExist
-	}
-	return user, nil
-} */

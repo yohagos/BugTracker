@@ -123,7 +123,6 @@ func UserGetAllInformations(username string) (User, error) {
 	}
 
 	for k, v := range result {
-		log.Println("Loop - v ", v)
 		switch k {
 		case "name":
 			key := fmt.Sprintf("%v", v)
@@ -144,7 +143,7 @@ func UserGetAllInformations(username string) (User, error) {
 			key := fmt.Sprintf("%v", v)
 			user.setUserUpdatedAt(key)
 		default:
-			log.Println("-----")
+
 		}
 	}
 

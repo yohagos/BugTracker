@@ -21,3 +21,13 @@ func CheckBugTypeExists(acronym string) bool {
 	}
 	return true
 }
+
+// GetAllBugTypeInformations func
+func GetAllBugTypeInformations(acronym string) (bson.M, error) {
+	var result bson.M
+	if err := BugTypeCollection.FindOne(ctx, bson.M{"acronym": acronym}).Decode(&result); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return result, nil
+}
