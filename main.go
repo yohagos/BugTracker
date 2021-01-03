@@ -26,7 +26,7 @@ func main() {
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")
-	utils.LoadTemplate("./static/*.html")
+	utils.LoadTemplate("./templates/*.html")
 
 	r := routes.NewRouter()
 

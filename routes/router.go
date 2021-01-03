@@ -39,8 +39,8 @@ func NewRouter() *mux.Router {
 
 	router.HandleFunc("/{profile}", middleware.AuthRequired(profileGETHandler)).Methods("GET")
 
-	fs := http.FileServer(http.Dir("../static/"))
-	router.PathPrefix("/static/css/").Handler(http.StripPrefix("/static/", fs))
+	fs := http.FileServer(http.Dir("static/"))
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 	router.NotFoundHandler = router.NewRoute().HandlerFunc(pageNotFoundHandler).GetHandler()
 
 	return router
@@ -56,10 +56,7 @@ func push(w http.ResponseWriter, resource string) {
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
-	/* push(w, "../static/css/style.css") */
-
 	utils.ExecuteTemplate(w, "index.html", nil)
-	w.Header().Add("Content-Type", "text/css")
 }
 
 func registrationGETHandler(w http.ResponseWriter, r *http.Request) {
