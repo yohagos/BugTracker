@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"golang.org/x/crypto/bcrypt"
+
+	"../apperrors"
 	"../databases"
 	"../utils"
 
@@ -82,11 +85,19 @@ func (user *User) setUserUpdatedAt(str string) {
 }
 
 // CreateNewUser func
-func (user *User) CreateNewUser() {
+func (user *User) CreateNewUser() error {
 	ok := databases.CheckUserExists(user.GetUserName())
 	if !ok {
-		log.Println("Username already exists")
-		return
+		return apperrors.ErrorUserAlreadyExists
+	}
+
+	pwd := user.GetUserPassword()
+
+	cost := bcrypt.DefaultCost
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost)
+
+	if err != nil {
+		return err
 	}
 
 	time := utils.CreateTimeStamp()
@@ -94,11 +105,12 @@ func (user *User) CreateNewUser() {
 		{Key: "name", Value: user.Name},
 		{Key: "lastname", Value: user.Lastname},
 		{Key: "email", Value: user.Email},
-		{Key: "password", Value: user.Password},
+		{Key: "password", Value: hash},
 		{Key: "createdAt", Value: time},
 		{Key: "updatedAt", Value: time},
 	}
 	databases.CreateNewUser(userDocument)
+	return nil
 }
 
 // UserExists func
@@ -162,4 +174,35 @@ func TestCreateUser() {
 		{Key: "updatedAt", Value: timestamp},
 	}
 	databases.CreateNewUser(userDocument)
+}
+
+func bsonToUser(list bson.M) User {
+	var user User
+
+	for k, v := range list {
+		switch k {
+		case "name":
+			key := fmt.Sprintf("%v", v)
+			user.setUserName(key)
+		case "lastname":
+			key := fmt.Sprintf("%v", v)
+			user.setUserLastname(key)
+		case "email":
+			key := fmt.Sprintf("%v", v)
+			user.setUserEmail(key)
+		case "password":
+			key := fmt.Sprintf("%v", v)
+			user.setUserPassword(key)
+		case "createdAt":
+			key := fmt.Sprintf("%v", v)
+			user.setUserCreatedAt(key)
+		case "updatedAt":
+			key := fmt.Sprintf("%v", v)
+			user.setUserUpdatedAt(key)
+		default:
+
+		}
+	}
+
+	return user
 }

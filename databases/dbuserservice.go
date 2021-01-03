@@ -4,6 +4,8 @@ import (
 	"log"
 	"strings"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"../apperrors"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,13 +35,20 @@ func AuthentificationUser(username, password string) error {
 		return err
 	}
 
+	var userHash []byte
+
 	for _, v := range result {
 		if strings.Contains(v.(string), password) {
-			return nil
+			userHash = v.([]byte)
+			break
 		}
 	}
 
-	return apperrors.ErrorUserDoesNotExist
+	err := bcrypt.CompareHashAndPassword([]byte(userHash), []byte(password))
+	if err == nil {
+		return nil
+	}
+	return apperrors.ErrorPasswordMismatch
 }
 
 // GetAllUserInformations func
