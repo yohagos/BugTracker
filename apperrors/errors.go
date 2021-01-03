@@ -9,6 +9,9 @@ var (
 	// ErrorSessionInvalid error
 	ErrorSessionInvalid = errors.New("Current Session is invalid. Please login first")
 
+	// ErrorPasswordMismatch error
+	ErrorPasswordMismatch = errors.New("Password mismatches")
+
 	// ErrorRoutesPageNotFound error
 	ErrorRoutesPageNotFound = errors.New("Page does not exist. Please try again")
 	// ErrorRoutesPageDoesntExist error
@@ -20,6 +23,8 @@ var (
 
 	// ErrorUserDoesNotExist error
 	ErrorUserDoesNotExist = errors.New("Login is invalid. Username / Password does not exists")
+	// ErrorUserAlreadyExists error
+	ErrorUserAlreadyExists = errors.New("User already exists")
 
 	// ErrorBugTypeAlreadyExists error
 	ErrorBugTypeAlreadyExists = errors.New("BugType already exists")

@@ -8,20 +8,56 @@
 
     <body>
         <!-- NAV -->
-        <section class="navbar">
-            <nav>
-                <a href="/registration">Sign Up</a>
-                <a href="/login">Sign In</a>
-            </nav>
-        </section>
+        <div class="navbar">
+            <div class="container flex">
+                <nav>
+                    {{ if .Display }}
+                        <a href="/{profile}">My Profile</a>
+                    {{ end }}
+                    <a href="/registration">Sign Up</a>
+                    <a href="/login">Sign In</a>
+                </nav>
+            </div>
+        </div>
+            
+        
         
         <!-- MAIN -->
-        <section class="main">
-            <h1>Index</h1>
-            <h1>Deployment</h1>
+        <section class="showcase">
+            <div class="container grid">
+                <div class="showcae-text">
+                    <h1>Easier Tracking</h1>
+                    <p>Lorem ipsum dolor sit amet consectetur 
+                        adipisicing elit. Ipsum velit atque tempora 
+                        placeat voluptas! Numquam sed aperiam 
+                        similique illo, quaerat optio dolores 
+                        ratione possimus labore fugit dolor 
+                        sunt ea! Repudiandae?</p>
+                </div>
+            </div>
         </section>
 
         <!-- FOOTER -->
+        <footer class="footer bg-dark py-5">
+            <div class="container grid grid-3">
+                <div>
+                    <h1>BugTracker
+                    </h1>
+                    <p>Copyright &copy; 2020</p>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/registration">Registration</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </nav>
+                <div class="social">
+                    <a href="#"><i class="fab fa-github fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+                </div>
+            </div>
+        </footer>
     </body>
-    
 </html>
