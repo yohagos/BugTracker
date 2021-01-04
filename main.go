@@ -19,7 +19,7 @@ func main() {
 	models.TestCreateTicket()
 
 	log.Println(models.UserGetAllInformations("test@test.com"))
-	log.Println(models.TicketGetAllInformations("test"))
+	log.Println(models.TicketGetAllInformations("test-12345"))
 	log.Println(models.BugTypeGetAllInformations("BUG"))
 	os.Exit(3) */
 

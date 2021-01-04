@@ -1,12 +1,10 @@
 package databases
 
 import (
+	"fmt"
 	"log"
-	"strings"
 
 	"golang.org/x/crypto/bcrypt"
-
-	"../apperrors"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -28,27 +26,32 @@ func CreateNewUser(user bson.D) {
 }
 
 // AuthentificationUser func
-func AuthentificationUser(username, password string) error {
+func AuthentificationUser(bcryptCost int, username, password string) error {
 	var result bson.M
 	if err := UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&result); err != nil {
 		log.Println(err)
 		return err
 	}
 
-	var userHash []byte
+	var userHash string
 
-	for _, v := range result {
-		if strings.Contains(v.(string), password) {
-			userHash = v.([]byte)
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
+
+	for k, v := range result {
+		if k == "password" {
+			userHash = fmt.Sprintf("%v", v)
 			break
 		}
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(userHash), []byte(password))
+	fmt.Println("\n", userHash)
+	fmt.Println(string(hash))
+
+	err := bcrypt.CompareHashAndPassword([]byte(userHash), []byte(hash))
 	if err == nil {
 		return nil
 	}
-	return apperrors.ErrorPasswordMismatch
+	return bcrypt.ErrMismatchedHashAndPassword
 }
 
 // GetAllUserInformations func

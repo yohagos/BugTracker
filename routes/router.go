@@ -85,10 +85,10 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
 
-	ok := models.UserAuthentification(username, password)
+	err := models.UserAuthentification(username, password)
 
-	if ok != nil {
-		utils.ExecuteTemplate(w, "login.html", apperrors.ErrorRoutesInvalidLogin)
+	if err != nil {
+		utils.ExecuteTemplate(w, "login.html", err)
 	}
 
 	session, _ := sessions.Store.Get(r, "session")

@@ -14,6 +14,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+const (
+	bcryptCost = 25
+)
+
 // User struct
 type User struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty"`
@@ -87,14 +91,13 @@ func (user *User) setUserUpdatedAt(str string) {
 // CreateNewUser func
 func (user *User) CreateNewUser() error {
 	ok := databases.CheckUserExists(user.GetUserName())
-	if !ok {
+	if ok {
 		return apperrors.ErrorUserAlreadyExists
 	}
 
 	pwd := user.GetUserPassword()
 
-	cost := bcrypt.DefaultCost
-	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), bcryptCost)
 
 	if err != nil {
 		return err
@@ -105,7 +108,7 @@ func (user *User) CreateNewUser() error {
 		{Key: "name", Value: user.Name},
 		{Key: "lastname", Value: user.Lastname},
 		{Key: "email", Value: user.Email},
-		{Key: "password", Value: hash},
+		{Key: "password", Value: string(hash)},
 		{Key: "createdAt", Value: time},
 		{Key: "updatedAt", Value: time},
 	}
@@ -120,8 +123,7 @@ func UserExists(username string) bool {
 
 // UserAuthentification func
 func UserAuthentification(username, password string) error {
-	err := databases.AuthentificationUser(username, password)
-	return err
+	return databases.AuthentificationUser(bcryptCost, username, password)
 }
 
 // UserGetAllInformations func
@@ -134,42 +136,30 @@ func UserGetAllInformations(username string) (User, error) {
 		return user, err
 	}
 
-	for k, v := range result {
-		switch k {
-		case "name":
-			key := fmt.Sprintf("%v", v)
-			user.setUserName(key)
-		case "lastname":
-			key := fmt.Sprintf("%v", v)
-			user.setUserLastname(key)
-		case "email":
-			key := fmt.Sprintf("%v", v)
-			user.setUserEmail(key)
-		case "password":
-			key := fmt.Sprintf("%v", v)
-			user.setUserPassword(key)
-		case "createdAt":
-			key := fmt.Sprintf("%v", v)
-			user.setUserCreatedAt(key)
-		case "updatedAt":
-			key := fmt.Sprintf("%v", v)
-			user.setUserUpdatedAt(key)
-		default:
-
-		}
-	}
+	user = bsonToUser(result)
 
 	return user, nil
 }
 
 // TestCreateUser func
 func TestCreateUser() {
+	pwd := "123456"
+
+	cost := bcrypt.DefaultCost
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost)
+
+	if err != nil {
+		return
+	}
+
+	newPwd := string(hash)
+
 	timestamp := utils.CreateTimeStamp()
 	userDocument := bson.D{
 		{Key: "name", Value: "Yosef"},
 		{Key: "lastname", Value: "Hagos"},
 		{Key: "email", Value: "test@test.com"},
-		{Key: "password", Value: "123456"},
+		{Key: "password", Value: newPwd},
 		{Key: "createdAt", Value: timestamp},
 		{Key: "updatedAt", Value: timestamp},
 	}
