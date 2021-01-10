@@ -14,9 +14,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const (
-	bcryptCost = 25
-)
+/* const (
+	bcryptCost int = 10
+) */
 
 // User struct
 type User struct {
@@ -96,8 +96,8 @@ func (user *User) CreateNewUser() error {
 	}
 
 	pwd := user.GetUserPassword()
-
-	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), bcryptCost)
+	cost := bcrypt.DefaultCost
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost)
 
 	if err != nil {
 		return err
@@ -123,7 +123,8 @@ func UserExists(username string) bool {
 
 // UserAuthentification func
 func UserAuthentification(username, password string) error {
-	return databases.AuthentificationUser(bcryptCost, username, password)
+	cost := bcrypt.DefaultCost
+	return databases.AuthentificationUser(cost, username, password)
 }
 
 // UserGetAllInformations func
@@ -144,7 +145,6 @@ func UserGetAllInformations(username string) (User, error) {
 // TestCreateUser func
 func TestCreateUser() {
 	pwd := "123456"
-
 	cost := bcrypt.DefaultCost
 	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost)
 

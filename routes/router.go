@@ -37,22 +37,14 @@ func NewRouter() *mux.Router {
 
 	router.HandleFunc("/logout", logoutGETHandler).Methods("GET")
 
-	router.HandleFunc("/{profile}", middleware.AuthRequired(profileGETHandler)).Methods("GET")
+	router.HandleFunc("/{profile}", middleware.AuthRequired(profilePOSTHandler)).Methods("POST")
+
+	router.NotFoundHandler = router.NewRoute().HandlerFunc(pageNotFoundHandler).GetHandler()
 
 	fs := http.FileServer(http.Dir("static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
-	router.NotFoundHandler = router.NewRoute().HandlerFunc(pageNotFoundHandler).GetHandler()
 
 	return router
-}
-
-func push(w http.ResponseWriter, resource string) {
-	pusher, ok := w.(http.Pusher)
-	if ok {
-		if err := pusher.Push(resource, nil); err != nil {
-			return
-		}
-	}
 }
 
 func indexGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -91,11 +83,18 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 		utils.ExecuteTemplate(w, "login.html", err)
 	}
 
+	user, err := models.UserGetAllInformations(username)
+	if err != nil {
+		log.Println(err)
+	}
+
 	session, _ := sessions.Store.Get(r, "session")
 	session.Values["username"] = username
 	session.Save(r, w)
+	username = user.GetUserLastname()
+	redirectString := "/" + username
 
-	http.Redirect(w, r, "/"+username, 302)
+	http.Redirect(w, r, redirectString, 302)
 }
 
 func logoutGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -167,7 +166,7 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/"+username, 302)
 }
 
-func profileGETHandler(w http.ResponseWriter, r *http.Request) {
+func profilePOSTHandler(w http.ResponseWriter, r *http.Request) {
 	i := r.URL.RequestURI()[1:]
 	if strings.EqualFold("favicon.ico", i) {
 		return
