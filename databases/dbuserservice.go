@@ -34,9 +34,6 @@ func AuthentificationUser(bcryptCost int, username, password string) error {
 	}
 
 	var userHash string
-
-	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
-
 	for k, v := range result {
 		if k == "password" {
 			userHash = fmt.Sprintf("%v", v)
@@ -44,10 +41,7 @@ func AuthentificationUser(bcryptCost int, username, password string) error {
 		}
 	}
 
-	fmt.Println("\n", userHash)
-	fmt.Println(string(hash))
-
-	err := bcrypt.CompareHashAndPassword([]byte(userHash), []byte(hash))
+	err := bcrypt.CompareHashAndPassword([]byte(userHash), []byte(password))
 	if err == nil {
 		return nil
 	}
