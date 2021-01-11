@@ -44,6 +44,17 @@ p {
   margin: 10px 0;
 }
 
+input[type="text"] #user {
+  border: 2px solid;
+  border-radius: 4px;
+  height: 18px;
+  width: 32px;
+  padding: 10px 15px;
+  margin: 10px 5px;
+  font-size: 16px;
+  color: var(--secondary-font-color);
+}
+
 .navbar {
   background-color: var(--secondary-background-color);
   color: var(--secondary-font-color);
