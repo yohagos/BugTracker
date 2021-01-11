@@ -166,19 +166,9 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func profilePOSTHandler(w http.ResponseWriter, r *http.Request) {
-	i := r.URL.RequestURI()[1:]
-	if strings.EqualFold("favicon.ico", i) {
-		return
-	}
-
-	session, _ := sessions.Store.Get(r, "session")
-	currentUser, _ := session.Values["username"]
-	/* if !ok {
-		log.Println(ok)
-		http.Redirect(w, r, "/login", 302)
-	} */
-
-	ok := models.UserExists(currentUser.(string))
+	username := mux.Vars(r)["profile"]
+	
+	ok := models.UserExists(username)
 	if !ok {
 		log.Println(ok)
 		http.Redirect(w, r, "/login", 302)
