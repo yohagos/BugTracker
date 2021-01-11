@@ -128,8 +128,8 @@ func UserAuthentification(username, password string) error {
 }
 
 // UserGetAllInformations func
-func UserGetAllInformations(username string) (User, error) {
-	var user User
+func UserGetAllInformations(username string) (*User, error) {
+	var user *User
 
 	result, err := databases.GetAllUserInformations(username)
 	if err != nil {
@@ -166,7 +166,7 @@ func TestCreateUser() {
 	databases.CreateNewUser(userDocument)
 }
 
-func bsonToUser(list bson.M) User {
+func bsonToUser(list bson.M) *User {
 	var user User
 
 	for k, v := range list {
@@ -194,5 +194,5 @@ func bsonToUser(list bson.M) User {
 		}
 	}
 
-	return user
+	return &user
 }

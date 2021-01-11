@@ -21,22 +21,20 @@ var ctx = context.TODO()
 // NewRouter func
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/{profile}", middleware.AuthRequired(profilePOSTHandler)).Methods("POST")
+
 	router.HandleFunc("/", indexGETHandler).Methods("GET")
 
-	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
-	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
-
 	router.HandleFunc("/login", loginGETHandler).Methods("GET")
-	router.HandleFunc("/login", loginPOSTHandler).Methods("POST")
-
-	router.HandleFunc("/bugtype", bugtypeGETHandler).Methods("GET")
-	router.HandleFunc("/bugtype", bugtypePOSTHandler).Methods("POST")
-
-	router.HandleFunc("/ticket", ticketsGETHandler).Methods("GET")
-	router.HandleFunc("/ticket", ticketsPOSTHandler).Methods("POST")
-
+	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
+	router.HandleFunc("/bugtype/create", bugtypeGETHandler).Methods("GET")
+	router.HandleFunc("/ticket/create", ticketsGETHandler).Methods("GET")
 	router.HandleFunc("/logout", logoutGETHandler).Methods("GET")
+
+	router.HandleFunc("/login", loginPOSTHandler).Methods("POST")
+	router.HandleFunc("/profile/{user}", middleware.AuthRequired(profilePOSTHandler)).Methods("GET")
+	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
+	router.HandleFunc("/bugtype/create", bugtypePOSTHandler).Methods("POST")
+	router.HandleFunc("/ticket/create", ticketsPOSTHandler).Methods("POST")
 
 	fs := http.FileServer(http.Dir("static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
@@ -82,16 +80,16 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 		utils.ExecuteTemplate(w, "login.html", err)
 	}
 
-	user, err := models.UserGetAllInformations(username)
+	/* user, err := models.UserGetAllInformations(username)
 	if err != nil {
 		log.Println(err)
-	}
+	} */
 
 	session, _ := sessions.Store.Get(r, "session")
 	session.Values["username"] = username
 	session.Save(r, w)
-	username = user.GetUserLastname()
-	redirectString := "/" + username
+	/* username = user.GetUserLastname() */
+	redirectString := "/profile/" + username
 
 	http.Redirect(w, r, redirectString, 302)
 }
@@ -166,20 +164,24 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func profilePOSTHandler(w http.ResponseWriter, r *http.Request) {
-	username := mux.Vars(r)["profile"]
-	
+	params := mux.Vars(r)
+	username := params["user"]
+
+	if strings.EqualFold("favicon.ico", username) {
+		return
+	}
 	ok := models.UserExists(username)
 	if !ok {
 		log.Println(ok)
-		http.Redirect(w, r, "/login", 302)
+		return
 	}
-	user, err := models.UserGetAllInformations(currentUser.(string))
+	user, err := models.UserGetAllInformations(username)
 	if err != nil {
 		log.Println(err)
 	}
 
 	utils.ExecuteTemplate(w, "profile.html", struct {
-		User models.User
+		User *models.User
 	}{
 		User: user,
 	})
