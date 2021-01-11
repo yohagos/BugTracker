@@ -11,7 +11,8 @@ import (
 
 // CheckUserExists func
 func CheckUserExists(username string) bool {
-	if err := UserCollection.FindOne(ctx, bson.M{"email": username}); err != nil {
+	var u bson.M
+	if err := UserCollection.FindOne(ctx, bson.M{"email": username}).Decode(&u); err != nil {
 		return false
 	}
 	return true

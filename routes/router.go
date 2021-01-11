@@ -21,6 +21,7 @@ var ctx = context.TODO()
 // NewRouter func
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
+	router.HandleFunc("/{profile}", middleware.AuthRequired(profilePOSTHandler)).Methods("POST")
 	router.HandleFunc("/", indexGETHandler).Methods("GET")
 
 	router.HandleFunc("/registration", registrationGETHandler).Methods("GET")
@@ -37,12 +38,10 @@ func NewRouter() *mux.Router {
 
 	router.HandleFunc("/logout", logoutGETHandler).Methods("GET")
 
-	router.HandleFunc("/{profile}", middleware.AuthRequired(profilePOSTHandler)).Methods("POST")
-
-	router.NotFoundHandler = router.NewRoute().HandlerFunc(pageNotFoundHandler).GetHandler()
-
 	fs := http.FileServer(http.Dir("static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
+
+	router.NotFoundHandler = router.NewRoute().HandlerFunc(pageNotFoundHandler).GetHandler()
 
 	return router
 }
@@ -173,13 +172,13 @@ func profilePOSTHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	session, _ := sessions.Store.Get(r, "session")
-	currentUser, ok := session.Values["username"]
-	if !ok {
+	currentUser, _ := session.Values["username"]
+	/* if !ok {
 		log.Println(ok)
 		http.Redirect(w, r, "/login", 302)
-	}
+	} */
 
-	ok = models.UserExists(currentUser.(string))
+	ok := models.UserExists(currentUser.(string))
 	if !ok {
 		log.Println(ok)
 		http.Redirect(w, r, "/login", 302)
