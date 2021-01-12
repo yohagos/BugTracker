@@ -157,3 +157,13 @@ func BugTypeGetAllInformations(acronym string) (BugTypes, error) {
 	}
 	return bugtype, nil
 }
+
+// BugTypeListOfAcronyms func
+func BugTypeListOfAcronyms() (*[]string, error) {
+	list, err := databases.GetListOfAllBugTypes()
+	if err != nil {
+		log.Println(err)
+		return list, err
+	}
+	return list, nil
+}

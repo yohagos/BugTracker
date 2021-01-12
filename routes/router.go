@@ -97,7 +97,12 @@ func logoutGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func bugtypeGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "bugtypes.html", nil)
+	user := CheckCurrentSession(r)
+	utils.ExecuteTemplate(w, "bugtypes.html", struct {
+		User string
+	}{
+		User: user,
+	})
 }
 
 func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -133,11 +138,19 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 
 	SaveCurrentSession(w, r, sessionKey)
 	utils.ExecuteTemplate(w, "bugtypes.html", msg)
-	//http.Redirect(w, r, "/bugtype/create", 302)
 }
 
 func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "tickets.html", nil)
+	user := CheckCurrentSession(r)
+	list, _ := models.BugTypeListOfAcronyms()
+
+	utils.ExecuteTemplate(w, "tickets.html", struct {
+		User string
+		List *[]string
+	}{
+		User: user,
+		List: list,
+	})
 }
 
 func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {

@@ -10,15 +10,15 @@
         <!-- NAV -->
         <section class="navbar">
             <nav>
-                <a href="/{profile}">Profile</a>
+                <a href="/profile/{{.User}}">Profile</a>
             </nav>
         </section>
 
         <!-- MAIN -->
         <section class="main">
             <br>
-            {{ if . }}
-                <div class="error"> {{ . }}</div>
+            {{ if .Error }}
+                <div class="error"></div>
             {{ end }}
             <br>
             <h1>Create Tickets</h1>
@@ -26,8 +26,8 @@
             <form method="post">
                 <input type="text" name="name" id="ticketName">
                 <select name="bugtype" id="ticketBugtype">
-                    {{ range .BugTypes }}
-                        <option value="{{ .GetBugTypeAcronym }}">{{ .GetBugTypeAcronym }}</option>
+                    {{ range .List }}
+                        <option value="{{ . }}">{{ . }}</option>
                     {{ end }}
                 </select>
                 <input type="text" name="status" id="ticketStatus">
