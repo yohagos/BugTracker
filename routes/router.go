@@ -29,9 +29,9 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/bugtype/create", bugtypeGETHandler).Methods("GET")
 	router.HandleFunc("/ticket/create", ticketsGETHandler).Methods("GET")
 	router.HandleFunc("/logout", logoutGETHandler).Methods("GET")
+	router.HandleFunc("/profile/{user}", middleware.AuthRequired(profileGETHandler)).Methods("GET")
 
 	router.HandleFunc("/login", loginPOSTHandler).Methods("POST")
-	router.HandleFunc("/profile/{user}", middleware.AuthRequired(profilePOSTHandler)).Methods("GET")
 	router.HandleFunc("/registration", registrationPOSTHandler).Methods("POST")
 	router.HandleFunc("/bugtype/create", bugtypePOSTHandler).Methods("POST")
 	router.HandleFunc("/ticket/create", ticketsPOSTHandler).Methods("POST")
@@ -80,15 +80,10 @@ func loginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 		utils.ExecuteTemplate(w, "login.html", err)
 	}
 
-	/* user, err := models.UserGetAllInformations(username)
-	if err != nil {
-		log.Println(err)
-	} */
-
 	session, _ := sessions.Store.Get(r, "session")
 	session.Values["username"] = username
 	session.Save(r, w)
-	/* username = user.GetUserLastname() */
+
 	redirectString := "/profile/" + username
 
 	http.Redirect(w, r, redirectString, 302)
@@ -102,7 +97,7 @@ func logoutGETHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func bugtypeGETHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "createbugs.html", nil)
+	utils.ExecuteTemplate(w, "bugtypes.html", nil)
 }
 
 func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
@@ -118,9 +113,9 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 	bugtypeName := r.PostForm.Get("name")
 	bugtypeDescription := r.PostForm.Get("description")
 
-	ok := models.NewBugTypeExists(bugtypeAcronym)
+	ok := models.BugTypeExists(bugtypeAcronym)
 
-	if ok != nil {
+	if ok {
 		utils.ExecuteTemplate(w, "bugtypes.html", ok)
 	}
 
@@ -129,10 +124,16 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 	newBugType.Name = bugtypeName
 	newBugType.Description = bugtypeDescription
 
-	newBugType.CreateNewBugType()
+	err := newBugType.CreateNewBugType()
+	if err != nil {
+		utils.ExecuteTemplate(w, "bugtypes.html", err)
+	}
+
+	msg := "Bugtype '" + bugtypeAcronym + "' created"
 
 	SaveCurrentSession(w, r, sessionKey)
-	http.Redirect(w, r, "/bugtype", 302)
+	utils.ExecuteTemplate(w, "bugtypes.html", msg)
+	//http.Redirect(w, r, "/bugtype/create", 302)
 }
 
 func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -163,7 +164,7 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/"+username, 302)
 }
 
-func profilePOSTHandler(w http.ResponseWriter, r *http.Request) {
+func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	username := params["user"]
 

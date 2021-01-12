@@ -7,11 +7,13 @@ import (
 )
 
 // CreateNewBugType func
-func CreateNewBugType(bugtype bson.D) {
+func CreateNewBugType(bugtype bson.D) error {
 	_, err := BugTypeCollection.InsertOne(ctx, bugtype)
 	if err != nil {
 		log.Println(err)
+		return err
 	}
+	return nil
 }
 
 // CheckBugTypeExists func

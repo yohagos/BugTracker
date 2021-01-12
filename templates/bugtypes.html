@@ -10,7 +10,8 @@
     <!-- NAV -->
     <section class="navbar">
       <nav>
-        <a href="/{profile}">My Profile</a>
+        <a href="/profile/{user}">My Profile</a>
+        <a href="/ticket/create">Create Tickets</a>
       </nav>
     </section>
 
@@ -24,9 +25,9 @@
       <h1>Create new Bugs</h1>
 
       <form method="post">
-        <input type="text" name="acronym" id="bugtypeAcronym">
-        <input type="text" name="name" id="bugtypeName">
-        <textarea name="description" id="bugtypeDescription" cols="40" rows="20"></textarea>
+        <input type="text" name="acronym" id="bugtypeAcronym" placeholder="Acronym"><br>
+        <input type="text" name="name" id="bugtypeName" placeholder="Name"><br>
+        <textarea name="description" id="bugtypeDescription" cols="40" rows="20" placeholder="Description"></textarea><br>
         <button type="submit">Add new Bugtype</button>
       </form>
     </section>

@@ -81,10 +81,20 @@ func (bugtype *BugTypes) setBugTypeUpdatedAt(bt string) {
 func (bugtype *BugTypes) CreateNewBugType() error {
 	ok := BugTypeExists(bugtype.GetBugTypeAcronym())
 	if ok {
-		log.Println(apperrors.ErrorBugTypeAlreadyExists)
 		return apperrors.ErrorBugTypeAlreadyExists
 	}
-	return nil
+
+	timestamp := utils.CreateTimeStamp()
+	bugDocument := bson.D{
+		{Key: "description", Value: bugtype.Description},
+		{Key: "acronym", Value: bugtype.Acronym},
+		{Key: "name", Value: bugtype.Name},
+		{Key: "createdAt", Value: timestamp},
+		{Key: "updatedAt", Value: timestamp},
+	}
+
+	return databases.CreateNewBugType(bugDocument)
+
 }
 
 // BugTypeExists method
