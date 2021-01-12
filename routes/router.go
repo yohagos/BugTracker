@@ -113,9 +113,9 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 	bugtypeName := r.PostForm.Get("name")
 	bugtypeDescription := r.PostForm.Get("description")
 
-	ok := models.NewBugTypeExists(bugtypeAcronym)
+	ok := models.BugTypeExists(bugtypeAcronym)
 
-	if ok != nil {
+	if ok {
 		utils.ExecuteTemplate(w, "bugtypes.html", ok)
 	}
 
@@ -124,10 +124,16 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 	newBugType.Name = bugtypeName
 	newBugType.Description = bugtypeDescription
 
-	newBugType.CreateNewBugType()
+	err := newBugType.CreateNewBugType()
+	if err != nil {
+		utils.ExecuteTemplate(w, "bugtypes.html", err)
+	}
+
+	msg := "Bugtype '" + bugtypeAcronym + "' created"
 
 	SaveCurrentSession(w, r, sessionKey)
-	http.Redirect(w, r, "/bugtype", 302)
+	utils.ExecuteTemplate(w, "bugtypes.html", msg)
+	//http.Redirect(w, r, "/bugtype/create", 302)
 }
 
 func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
