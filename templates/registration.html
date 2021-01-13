@@ -4,11 +4,21 @@
         <meta charset="utf-8">
         <title>Registration</title>
         <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/utilities.css"/>
     </head>
 
     <body>
-        <a href="/">Index</a>
-        <a href="/login">Login</a>
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="container flex">
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/login">Sign In</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
         
         <br>
             {{ if . }}
@@ -26,16 +36,27 @@
         </form>
 
         
-        <section class="navbar">
-            <nav>
-                <a href="index.html"></a>
-            </nav>
-        </section>
-        <br>
-        <section class="form registration">
-
-        </section>
-        
-        <br><br>
+        <!-- FOOTER -->
+        <footer class="footer bg-dark py-5">
+            <div class="container grid grid-3">
+                <div>
+                    <h1>BugTracker
+                    </h1>
+                    <p>Copyright &copy; 2020</p>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/registration">Sign Up</a></li>
+                        <li><a href="/login">Sign In</a></li>
+                    </ul>
+                </nav>
+                <div class="social">
+                    <a href="#"><i class="fab fa-github fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>

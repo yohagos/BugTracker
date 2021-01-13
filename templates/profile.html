@@ -4,29 +4,46 @@
         <meta charset="utf-8">
         <title>Profile</title>
         <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/utilities.css"/>
     </head>
 
     <body>
         <!-- NAV -->
-        <section class="navbar">
-            <nav>
-                <a href="/bugtype/create">Create Bugtypes</a>
-                <a href="/ticket/create">Create Tickets</a>
-                <a href="/logout">Logout</a>
-            </nav>
-        </section>
-
+        <div class="navbar">
+            <div class="container flex">
+                <nav>
+                    <ul>
+                        <li><a href="/bugtype/create">Create Bugtypes</a></li>
+                        <li><a href="/ticket/create">Create Tickets</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+            
         <!-- MAIN -->
         <section class="main">
-            
-            <br>
-            <h1>Hello {{ .User.GetUserName }}</h1>
-            
+            <div class="container">
+                <br>
+                <h1>Hello {{ .User.GetUserName }}</h1>
+            </div>
         </section>
 
         <!-- FOOTER -->
-        <section class="footer">
-
-        </section>
+        <footer class="footer bg-dark py-5">
+            <div class="container grid grid-3">
+                <div>
+                    <h1>BugTracker
+                    </h1>
+                    <p>Copyright &copy; 2020</p>
+                </div>
+                <div class="social">
+                    <a href="#"><i class="fab fa-github fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>

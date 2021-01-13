@@ -4,22 +4,24 @@
         <meta charset="utf-8">
         <title>Tickets</title>
         <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/utilities.css"/>
     </head>
 
     <body>
         <!-- NAV -->
-        <section class="navbar">
-            <nav>
-                <a href="/profile/{{.User}}">Profile</a>
-            </nav>
-        </section>
+        <div class="navbar">
+            <div class="container flex">
+                <nav>
+                    <ul>
+                        <li><a href="/profile/{{.User}}">Profile</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
 
         <!-- MAIN -->
         <section class="main">
             <br>
-            {{ if .Error }}
-                <div class="error"></div>
-            {{ end }}
             <br>
             <h1>Create Tickets</h1>
 
@@ -36,5 +38,20 @@
         </section>
 
         <!-- FOOTER -->
+        <footer class="footer bg-dark py-5">
+            <div class="container grid grid-3">
+                <div>
+                    <h1>BugTracker
+                    </h1>
+                    <p>Copyright &copy; 2020</p>
+                </div>
+                <div class="social">
+                    <a href="#"><i class="fab fa-github fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>
