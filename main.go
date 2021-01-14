@@ -14,15 +14,6 @@ func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
 
-	/* models.TestCreateUser()
-	models.TestCreateNewBugType()
-	models.TestCreateTicket()
-
-	log.Println(models.UserGetAllInformations("test@test.com"))
-	log.Println(models.TicketGetAllInformations("test-12345"))
-	log.Println(models.BugTypeGetAllInformations("BUG"))
-	os.Exit(3) */
-
 	sessions.SessionInit()
 
 	log.Println("Loading Templates..")

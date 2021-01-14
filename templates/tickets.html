@@ -4,37 +4,57 @@
         <meta charset="utf-8">
         <title>Tickets</title>
         <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/utilities.css"/>
     </head>
 
     <body>
         <!-- NAV -->
-        <section class="navbar">
-            <nav>
-                <a href="/{profile}">Profile</a>
-            </nav>
-        </section>
+        <div class="navbar">
+            <div class="container flex">
+                <nav>
+                    <ul>
+                        <li><a href="/profile/{{.User}}">Profile</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
 
         <!-- MAIN -->
         <section class="main">
             <br>
-            {{ if . }}
-                <div class="error"> {{ . }}</div>
-            {{ end }}
             <br>
             <h1>Create Tickets</h1>
 
             <form method="post">
-                <input type="text" name="name" id="ticketName">
                 <select name="bugtype" id="ticketBugtype">
-                    {{ range .BugTypes }}
-                        <option value="{{ .GetBugTypeAcronym }}">{{ .GetBugTypeAcronym }}</option>
+                    {{ range .List }}
+                        <option value="{{ . }}">{{ . }}</option>
                     {{ end }}
                 </select>
-                <input type="text" name="status" id="ticketStatus">
+                <select name="status" id="ticketStatus">
+                    <option>New</option>
+                    <option>Implemented</option>
+                    <option>Testing</option>
+                </select>
                 <button type="submit">Create New Ticket</button>
             </form>
         </section>
 
         <!-- FOOTER -->
+        <footer class="footer bg-dark py-5">
+            <div class="container grid grid-3">
+                <div>
+                    <h1>BugTracker
+                    </h1>
+                    <p>Copyright &copy; 2020</p>
+                </div>
+                <div class="social">
+                    <a href="#"><i class="fab fa-github fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>

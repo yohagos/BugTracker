@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>Index</title>
         <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/utilities.css"/>
     </head>
 
     <body>
@@ -11,17 +12,14 @@
         <div class="navbar">
             <div class="container flex">
                 <nav>
-                    {{ if .Display }}
-                        <a href="/{profile}">My Profile</a>
-                    {{ end }}
-                    <a href="/registration">Sign Up</a>
-                    <a href="/login">Sign In</a>
+                    <ul>
+                        <li><a href="/registration">Sign Up</a></li>
+                        <li><a href="/login">Sign In</a></li>
+                    </ul>
                 </nav>
             </div>
         </div>
             
-        
-        
         <!-- MAIN -->
         <section class="showcase">
             <div class="container grid">
@@ -47,8 +45,8 @@
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="/registration">Registration</a></li>
-                        <li><a href="/login">Login</a></li>
+                        <li><a href="/registration">Sign Up</a></li>
+                        <li><a href="/login">Sign In</a></li>
                     </ul>
                 </nav>
                 <div class="social">
