@@ -17,9 +17,9 @@ func CreateNewTicket(ticket bson.D) {
 // CheckTicketExists func
 func CheckTicketExists(name string) bool {
 	if err := TicketCollection.FindOne(ctx, bson.M{"name": name}); err != nil {
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 // GetAllTicketInformations func

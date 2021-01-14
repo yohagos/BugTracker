@@ -134,10 +134,10 @@ func bugtypePOSTHandler(w http.ResponseWriter, r *http.Request) {
 		utils.ExecuteTemplate(w, "bugtypes.html", err)
 	}
 
-	msg := "Bugtype '" + bugtypeAcronym + "' created"
-
 	SaveCurrentSession(w, r, sessionKey)
-	utils.ExecuteTemplate(w, "bugtypes.html", msg)
+
+	redirect := "/profile/" + sessionKey
+	http.Redirect(w, r, redirect, 302)
 }
 
 func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -146,7 +146,7 @@ func ticketsGETHandler(w http.ResponseWriter, r *http.Request) {
 
 	utils.ExecuteTemplate(w, "tickets.html", struct {
 		User string
-		List *[]string
+		List []string
 	}{
 		User: user,
 		List: list,
@@ -160,21 +160,32 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(15 * time.Second)
 		http.Redirect(w, r, "/", 303)
 	}
-	r.ParseForm()
-	username := r.PostForm.Get("username")
-	password := r.PostForm.Get("password")
+	if r.Method == http.MethodPost {
+		r.ParseForm()
+		/* name := r.PostForm.Get("name") */
+		bugtype := r.PostForm.Get("bugtype")
+		status := r.PostForm.Get("status")
 
-	ok := models.UserAuthentification(username, password)
+		var ticket models.Tickets
+		/* ticket.SetTicketName(name) */
+		ticket.SetTicketBugType(bugtype)
+		ticket.SetTicketStatus(status)
+		ticket.SetTicketCreatedBy(sessionKey)
 
-	if ok != nil {
-		utils.ExecuteTemplate(w, "login.gohtml", apperrors.ErrorRoutesInvalidLogin)
+		ticket.CreateNewTicket()
+
+		/* if ok != nil {
+			utils.ExecuteTemplate(w, "login.html", apperrors.ErrorRoutesInvalidLogin)
+		} */
+
+		session, _ := sessions.Store.Get(r, "session")
+		session.Values["username"] = sessionKey
+		session.Save(r, w)
+
+		redirect := "/profile/" + sessionKey
+
+		http.Redirect(w, r, redirect, 302)
 	}
-
-	session, _ := sessions.Store.Get(r, "session")
-	session.Values["username"] = username
-	session.Save(r, w)
-
-	http.Redirect(w, r, "/"+username, 302)
 }
 
 func profileGETHandler(w http.ResponseWriter, r *http.Request) {

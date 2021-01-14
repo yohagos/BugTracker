@@ -159,11 +159,27 @@ func BugTypeGetAllInformations(acronym string) (BugTypes, error) {
 }
 
 // BugTypeListOfAcronyms func
-func BugTypeListOfAcronyms() (*[]string, error) {
+func BugTypeListOfAcronyms() ([]string, error) {
 	list, err := databases.GetListOfAllBugTypes()
 	if err != nil {
 		log.Println(err)
 		return list, err
 	}
+	list = removeDuplicates(list)
 	return list, nil
+}
+
+func removeDuplicates(list []string) []string {
+	encountered := map[string]bool{}
+	result := []string{}
+
+	for v := range list {
+		if encountered[list[v]] == true {
+
+		} else {
+			encountered[list[v]] = true
+			result = append(result, list[v])
+		}
+	}
+	return result
 }

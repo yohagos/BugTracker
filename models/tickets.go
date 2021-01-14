@@ -72,41 +72,48 @@ func (ticket *Tickets) GetTicketCreatedAt() string {
 	return ticket.CreatedAt
 }
 
-func (ticket *Tickets) setTicketName(tic string) {
+// SetTicketName func
+func (ticket *Tickets) SetTicketName(tic string) {
 	ticket.Name = tic
 }
 
-func (ticket *Tickets) setTicketCreatedBy(tic string) {
+// SetTicketCreatedBy func
+func (ticket *Tickets) SetTicketCreatedBy(tic string) {
 	ticket.CreatedBy = tic
 }
 
-func (ticket *Tickets) setTicketBugType(tic string) {
+// SetTicketBugType func
+func (ticket *Tickets) SetTicketBugType(tic string) {
 	ticket.BugType = tic
 }
 
-func (ticket *Tickets) setTicketStatus(tic string) {
+// SetTicketStatus func
+func (ticket *Tickets) SetTicketStatus(tic string) {
 	ticket.Status = tic
 }
 
-func (ticket *Tickets) setTicketUpdatedAt(tic string) {
+// SetTicketUpdatedAt func
+func (ticket *Tickets) SetTicketUpdatedAt(tic string) {
 	ticket.UpdatedAt = tic
 }
 
-func (ticket *Tickets) setTicketCreatedAt(tic string) {
+// SetTicketCreatedAt func
+func (ticket *Tickets) SetTicketCreatedAt(tic string) {
 	ticket.CreatedAt = tic
 }
 
 // CreateNewTicket func
 func (ticket *Tickets) CreateNewTicket() {
-	ok := databases.CheckTicketExists(ticket.GetTicketName())
+	newname := ticket.GetTicketBugType() + "-" + utils.RandomFiveDigitNumber()
+	ok := databases.CheckTicketExists(newname)
 	if !ok {
 		log.Println("Ticket already exists")
 		return
 	}
-	num := utils.RandomFiveDigitNumber()
+	/* num := utils.RandomFiveDigitNumber() */
 	timeStamp := utils.CreateTimeStamp()
 	ticketDocument := bson.D{
-		{Key: "name", Value: ticket.GetTicketName() + "-" + num},
+		{Key: "name", Value: newname},
 		{Key: "createdby", Value: ticket.GetTicketCreatedBy()},
 		{Key: "bugtype", Value: ticket.GetTicketBugType()},
 		{Key: "status", Value: ticket.GetTicketStatus()},
@@ -135,22 +142,22 @@ func TicketGetAllInformations(name string) (Tickets, error) {
 		switch k {
 		case "name":
 			key := fmt.Sprintf("%v", v)
-			ticket.setTicketName(key)
+			ticket.SetTicketName(key)
 		case "bugtype":
 			key := fmt.Sprintf("%v", v)
-			ticket.setTicketBugType(key)
+			ticket.SetTicketBugType(key)
 		case "createdBy":
 			key := fmt.Sprintf("%v", v)
-			ticket.setTicketCreatedBy(key)
+			ticket.SetTicketCreatedBy(key)
 		case "status":
 			key := fmt.Sprintf("%v", v)
-			ticket.setTicketStatus(key)
+			ticket.SetTicketStatus(key)
 		case "createdAt":
 			key := fmt.Sprintf("%v", v)
-			ticket.setTicketCreatedAt(key)
+			ticket.SetTicketCreatedAt(key)
 		case "updatedAt":
 			key := fmt.Sprintf("%v", v)
-			ticket.setTicketUpdatedAt(key)
+			ticket.SetTicketUpdatedAt(key)
 		default:
 
 		}

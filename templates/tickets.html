@@ -26,13 +26,16 @@
             <h1>Create Tickets</h1>
 
             <form method="post">
-                <input type="text" name="name" id="ticketName">
                 <select name="bugtype" id="ticketBugtype">
                     {{ range .List }}
                         <option value="{{ . }}">{{ . }}</option>
                     {{ end }}
                 </select>
-                <input type="text" name="status" id="ticketStatus">
+                <select name="status" id="ticketStatus">
+                    <option>New</option>
+                    <option>Implemented</option>
+                    <option>Testing</option>
+                </select>
                 <button type="submit">Create New Ticket</button>
             </form>
         </section>

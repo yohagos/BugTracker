@@ -36,7 +36,7 @@ func GetAllBugTypeInformations(acronym string) (bson.M, error) {
 }
 
 // GetListOfAllBugTypes func
-func GetListOfAllBugTypes() (*[]string, error) {
+func GetListOfAllBugTypes() ([]string, error) {
 	cursor, err := BugTypeCollection.Find(ctx, bson.M{})
 	if err != nil {
 		log.Println(err)
@@ -51,7 +51,7 @@ func GetListOfAllBugTypes() (*[]string, error) {
 	return filterBugTypeList(btList), nil
 }
 
-func filterBugTypeList(bugtypeList []bson.M) *[]string {
+func filterBugTypeList(bugtypeList []bson.M) []string {
 	var list []string
 	for _, ListValue := range bugtypeList {
 		for key, unit := range ListValue {
@@ -61,5 +61,5 @@ func filterBugTypeList(bugtypeList []bson.M) *[]string {
 			}
 		}
 	}
-	return &list
+	return list
 }
