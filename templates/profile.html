@@ -27,18 +27,21 @@
                 <br>
                 <h1>Hello {{ .User.GetUserName }}</h1>
             </div>
+        </section>
 
-            {{ if .Tickets }}
+        {{ if .Tickets }}
+        <section class="tickets">
+            <h1>Your Tickets:</h1>
             <div class="listing">
                 {{ range .Tickets }}
                 <div class="card">
-                    <h3>Name: {{ .GetTicketName }}</h3>
-                    <p>Status: {{ .GetTicketStatus }}</p>
+                    <a href="/ticket/details/{{ .GetTicketName }}"><h3>{{ .GetTicketName }}</h3></a>
+                    <p>{{ .GetTicketStatus }}</p>
                 </div>
                 {{ end }}
             </div>
-            {{ end }}
         </section>
+        {{ end }}
 
         <!-- FOOTER -->
         <footer class="footer bg-dark py-5">

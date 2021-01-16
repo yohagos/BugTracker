@@ -129,13 +129,13 @@ func NewTicketExists(name string) bool {
 }
 
 // TicketGetAllInformations func
-func TicketGetAllInformations(name string) (Tickets, error) {
+func TicketGetAllInformations(name string) (*Tickets, error) {
 	var ticket Tickets
 
 	result, err := databases.GetAllTicketInformations(name)
 	if err != nil {
 		log.Println(err)
-		return ticket, err
+		return &ticket, err
 	}
 
 	for k, v := range result {
@@ -146,7 +146,7 @@ func TicketGetAllInformations(name string) (Tickets, error) {
 		case "bugtype":
 			key := fmt.Sprintf("%v", v)
 			ticket.SetTicketBugType(key)
-		case "createdBy":
+		case "createdby":
 			key := fmt.Sprintf("%v", v)
 			ticket.SetTicketCreatedBy(key)
 		case "status":
@@ -163,7 +163,7 @@ func TicketGetAllInformations(name string) (Tickets, error) {
 		}
 	}
 
-	return ticket, nil
+	return &ticket, nil
 }
 
 // GetTicketsByUser func
