@@ -31,3 +31,19 @@ func GetAllTicketInformations(name string) (bson.M, error) {
 	}
 	return result, nil
 }
+
+// AllTicketsByUser func
+func AllTicketsByUser(username string) (*[]bson.M, error) {
+	cursor, err := TicketCollection.Find(ctx, bson.M{"createdby": username})
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	var ticketList []bson.M
+	if err = cursor.All(ctx, &ticketList); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return &ticketList, nil
+}

@@ -165,3 +165,48 @@ func TicketGetAllInformations(name string) (Tickets, error) {
 
 	return ticket, nil
 }
+
+// GetTicketsByUser func
+func GetTicketsByUser(username string) (*[]Tickets, error) {
+	ticketList, err := databases.AllTicketsByUser(username)
+	if err != nil {
+		return nil, err
+	}
+
+	return bsonToTicketConverter(ticketList), nil
+}
+
+func bsonToTicketConverter(list *[]bson.M) *[]Tickets {
+	var ticketlist []Tickets
+
+	for _, listValue := range *list {
+		var tic Tickets
+
+		for keys, values := range listValue {
+			switch keys {
+			case "name":
+				key := fmt.Sprintf("%v", values)
+				tic.SetTicketName(key)
+			case "bugtype":
+				key := fmt.Sprintf("%v", values)
+				tic.SetTicketBugType(key)
+			case "createdby":
+				key := fmt.Sprintf("%v", values)
+				tic.SetTicketCreatedBy(key)
+			case "status":
+				key := fmt.Sprintf("%v", values)
+				tic.SetTicketStatus(key)
+			case "createdAt":
+				key := fmt.Sprintf("%v", values)
+				tic.SetTicketCreatedAt(key)
+			case "updatedAt":
+				key := fmt.Sprintf("%v", values)
+				tic.SetTicketUpdatedAt(key)
+			default:
+			}
+		}
+		ticketlist = append(ticketlist, tic)
+	}
+
+	return &ticketlist
+}

@@ -27,6 +27,17 @@
                 <br>
                 <h1>Hello {{ .User.GetUserName }}</h1>
             </div>
+
+            {{ if .Tickets }}
+            <div class="listing">
+                {{ range .Tickets }}
+                <div class="card">
+                    <h3>Name: {{ .GetTicketName }}</h3>
+                    <p>Status: {{ .GetTicketStatus }}</p>
+                </div>
+                {{ end }}
+            </div>
+            {{ end }}
         </section>
 
         <!-- FOOTER -->
