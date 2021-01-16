@@ -66,7 +66,10 @@ button {
 .navbar {
   background-color: var(--secondary-background-color);
   color: var(--secondary-font-color);
-  height: 100px;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: auto;
+  padding: 0 40px;
 }
 
 .navbar ul {
@@ -96,11 +99,20 @@ button {
 
 /* Tickets list */
 
-.listing .card {
+.tickets {
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: auto;
+  padding: 0 40px;
+}
+
+.tickets .listing .card {
   /* Add shadows to create the "card" effect */
   background-color: var(--secondary-background-color);
   box-shadow: 0 4px 8px 0 rgba(255, 166, 0, 0.452);
   transition: 0.3s;
+  width: 20%;
+  color: var(--secondary-font-color);
 }
 
 /* Tablets and under */

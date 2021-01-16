@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket - {{ .Ticket.GetTicketName }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/utilities.css"/>
+</head>
+<body>
+    <!-- NAV -->
+    <div class="navbar">
+        <div class="container flex">
+            <nav>
+                <ul>
+                    <li><a href="/bugtype/create">Create Bugtypes</a></li>
+                    <li><a href="/ticket/create">Create Tickets</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+        
+    <!-- MAIN -->
+    <section class="main">
+        <div class="container">
+            <h1>{{.Ticket.GetTicketName}}</h1>
+            <br>
+            <br>
+            <p>Status: {{ .Ticket.GetTicketStatus }}</p>
+            <p>Type: {{ .Ticket.GetTicketBugType }}</p>
+            <p>Created By: {{ .User.GetUserName }} {{ .User.GetUserLastname }}</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer bg-dark py-5">
+        <div class="container grid grid-3">
+            <div>
+                <h1>BugTracker
+                </h1>
+                <p>Copyright &copy; 2020</p>
+            </div>
+            <div class="social">
+                <a href="#"><i class="fab fa-github fa-2x"></i></a>
+                <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
