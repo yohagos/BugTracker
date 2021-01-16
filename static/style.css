@@ -94,6 +94,15 @@ button {
   padding: 0 40px;
 }
 
+/* Tickets list */
+
+.listing .card {
+  /* Add shadows to create the "card" effect */
+  background-color: var(--secondary-background-color);
+  box-shadow: 0 4px 8px 0 rgba(255, 166, 0, 0.452);
+  transition: 0.3s;
+}
+
 /* Tablets and under */
 @media (max-width: 768px) {
   .grid,

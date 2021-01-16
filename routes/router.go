@@ -162,21 +162,15 @@ func ticketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == http.MethodPost {
 		r.ParseForm()
-		/* name := r.PostForm.Get("name") */
 		bugtype := r.PostForm.Get("bugtype")
 		status := r.PostForm.Get("status")
 
 		var ticket models.Tickets
-		/* ticket.SetTicketName(name) */
 		ticket.SetTicketBugType(bugtype)
 		ticket.SetTicketStatus(status)
 		ticket.SetTicketCreatedBy(sessionKey)
 
 		ticket.CreateNewTicket()
-
-		/* if ok != nil {
-			utils.ExecuteTemplate(w, "login.html", apperrors.ErrorRoutesInvalidLogin)
-		} */
 
 		session, _ := sessions.Store.Get(r, "session")
 		session.Values["username"] = sessionKey
@@ -205,10 +199,17 @@ func profileGETHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
+	ticketsList, err := models.GetTicketsByUser(username)
+	if err != nil {
+		log.Println(err)
+	}
+
 	utils.ExecuteTemplate(w, "profile.html", struct {
-		User *models.User
+		User    *models.User
+		Tickets *[]models.Tickets
 	}{
-		User: user,
+		User:    user,
+		Tickets: ticketsList,
 	})
 }
 
