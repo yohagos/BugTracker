@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"../mails"
 	"../models"
 	"../sessions"
 	"../utils"
@@ -18,16 +19,36 @@ func RegistrationGETHandler(w http.ResponseWriter, r *http.Request) {
 
 // RegistrationPOSTHandler func
 func RegistrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
-	var createUser models.User
+	/* var createUser models.User
 	r.ParseForm()
 	createUser.Name = r.PostForm.Get("name")
 	createUser.Lastname = r.PostForm.Get("lastname")
 	createUser.Email = r.PostForm.Get("email")
 	createUser.Password = r.PostForm.Get("password")
 
-	createUser.CreateNewUser()
+	createUser.CreateNewUser() */
+	key := utils.GenerateVerificationKey()
+	mail := r.PostForm.Get("email")
+	name := r.PostForm.Get("name")
 
-	http.Redirect(w, r, "/login", 302)
+	var verificationUser models.UserVerification
+
+	r.ParseForm()
+	verificationUser.SetUserVerificationName(name)
+	verificationUser.SetUserVerificationLastname(r.PostForm.Get("lastname"))
+	verificationUser.SetUserVerificationPassword(r.PostForm.Get("password"))
+	verificationUser.SetUserVerificationEmail(mail)
+
+	verificationUser.SetUserVerificationGeneratedKey(key)
+	/* verificationUser.SetUserVerificationVerified(false) */
+
+	verificationUser.CreateVerificationProfile()
+
+	mails.SendVerificationMail(name, mail, key)
+
+	/* route := "/verfication/" + mail */
+
+	http.Redirect(w, r, "/verfication", 302)
 }
 
 // LoginGETHandler func

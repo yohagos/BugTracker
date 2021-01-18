@@ -26,6 +26,7 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/bugtype/create", BugtypeGETHandler).Methods("GET")
 	router.HandleFunc("/ticket/create", TicketsGETHandler).Methods("GET")
 	router.HandleFunc("/logout", LogoutGETHandler).Methods("GET")
+	router.HandleFunc("/verification/{user}", VerificationGETHandler).Methods("GET")
 	router.HandleFunc("/profile/{user}", middleware.AuthRequired(ProfileGETHandler)).Methods("GET")
 	router.HandleFunc("/ticket/details/{id}", middleware.AuthRequired(TicketDetailGETHandler)).Methods("GET")
 
@@ -33,6 +34,7 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/registration", RegistrationPOSTHandler).Methods("POST")
 	router.HandleFunc("/bugtype/create", BugtypePOSTHandler).Methods("POST")
 	router.HandleFunc("/ticket/create", TicketsPOSTHandler).Methods("POST")
+	router.HandleFunc("/verfication", VerificationPOSTHandler).Methods("POST")
 
 	fs := http.FileServer(http.Dir("static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
@@ -65,6 +67,9 @@ func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 func CheckCurrentSession(r *http.Request) string {
 	session, _ := sessions.Store.Get(r, "session")
 	key := session.Values["username"]
+	if key == "" {
+		return ""
+	}
 	exists := models.UserExists(key.(string))
 	if exists {
 		return key.(string)

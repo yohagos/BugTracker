@@ -91,22 +91,21 @@ func (user *User) CreateNewUser() error {
 		return apperrors.ErrorUserAlreadyExists
 	}
 
-	pwd := user.GetUserPassword()
+	/* pwd := user.GetUserPassword()
 	cost := bcrypt.DefaultCost
-	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost) */
 
-	if err != nil {
+	/* if err != nil {
 		return err
-	}
+	} */
 
-	time := utils.CreateTimeStamp()
 	userDocument := bson.D{
-		{Key: "name", Value: user.Name},
-		{Key: "lastname", Value: user.Lastname},
-		{Key: "email", Value: user.Email},
-		{Key: "password", Value: string(hash)},
-		{Key: "createdAt", Value: time},
-		{Key: "updatedAt", Value: time},
+		{Key: "name", Value: user.GetUserName},
+		{Key: "lastname", Value: user.GetUserLastname()},
+		{Key: "email", Value: user.GetUserEmail()},
+		{Key: "password", Value: user.GetUserPassword()},
+		{Key: "createdAt", Value: user.GetUserCreatedAt()},
+		{Key: "updatedAt", Value: user.GetUserUpdatedAt()},
 	}
 	databases.CreateNewUser(userDocument)
 	return nil
@@ -133,7 +132,7 @@ func UserGetAllInformations(username string) (*User, error) {
 		return user, err
 	}
 
-	user = bsonToUser(result)
+	user = BsonToUser(result)
 
 	return user, nil
 }
@@ -162,7 +161,8 @@ func TestCreateUser() {
 	databases.CreateNewUser(userDocument)
 }
 
-func bsonToUser(list bson.M) *User {
+// BsonToUser func
+func BsonToUser(list bson.M) *User {
 	var user User
 
 	for k, v := range list {

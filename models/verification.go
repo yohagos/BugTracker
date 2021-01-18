@@ -1,6 +1,8 @@
 package models
 
 import (
+	"log"
+
 	"../databases"
 	"../utils"
 	"go.mongodb.org/mongo-driver/bson"
@@ -49,27 +51,33 @@ func (verif *UserVerification) GetVerifiedUserVerified() bool {
 	return verif.Verified
 }
 
-func (verif *UserVerification) setUserVerificationEmail(str string) {
+// SetUserVerificationEmail func
+func (verif *UserVerification) SetUserVerificationEmail(str string) {
 	verif.Email = str
 }
 
-func (verif *UserVerification) setUserVerificationName(str string) {
+// SetUserVerificationName func
+func (verif *UserVerification) SetUserVerificationName(str string) {
 	verif.Name = str
 }
 
-func (verif *UserVerification) setUserVerificationLastname(str string) {
+// SetUserVerificationLastname func
+func (verif *UserVerification) SetUserVerificationLastname(str string) {
 	verif.Lastname = str
 }
 
-func (verif *UserVerification) setUserVerificationGeneratedKey(str string) {
+// SetUserVerificationGeneratedKey func
+func (verif *UserVerification) SetUserVerificationGeneratedKey(str string) {
 	verif.GeneratedKey = str
 }
 
-func (verif *UserVerification) setUserVerificationPassword(str string) {
+// SetUserVerificationPassword func
+func (verif *UserVerification) SetUserVerificationPassword(str string) {
 	verif.Password = str
 }
 
-func (verif *UserVerification) setUserVerificationVerified(bo bool) {
+// SetUserVerificationVerified func
+func (verif *UserVerification) SetUserVerificationVerified(bo bool) {
 	verif.Verified = bo
 }
 
@@ -79,8 +87,6 @@ func (verif *UserVerification) CreateVerificationProfile() {
 	if ok {
 		return
 	}
-
-	genKey := utils.GenerateVerificationKey()
 
 	pwd := verif.GetVerifiedUserPassword()
 	cost := bcrypt.DefaultCost
@@ -92,13 +98,35 @@ func (verif *UserVerification) CreateVerificationProfile() {
 
 	/* time := utils.CreateTimeStamp() */
 	verificationDocument := bson.D{
-		{Key: "name", Value: verif.Name},
-		{Key: "lastname", Value: verif.Lastname},
-		{Key: "email", Value: verif.Email},
+		{Key: "name", Value: verif.GetVerifiedUserName()},
+		{Key: "lastname", Value: verif.GetVerifiedUserLastname()},
+		{Key: "email", Value: verif.GetVerifiedUserEmail},
 		{Key: "password", Value: string(hash)},
-		{Key: "genratedKey", Value: genKey},
-		{Key: "verified", Value: false},
+		{Key: "genratedKey", Value: verif.GetVerifiedUserGeneratedKey()},
+		{Key: "verified", Value: verif.GetVerifiedUserVerified()},
 	}
 	databases.CreateNewVerificationProfile(verificationDocument)
 	return
+}
+
+// CheckVerification func
+func CheckVerification(mail, key string) bool {
+	genKey := databases.GetVerificationKey(mail)
+
+	if key == genKey {
+		return true
+	}
+	return false
+}
+
+// CreateNewUser func
+func CreateNewUser(mail string) {
+	document := databases.GetAllVerificationInformation(mail)
+
+	user := BsonToUser(document)
+
+	timestamp := utils.CreateTimeStamp()
+	user.setUserCreatedAt(timestamp)
+	user.setUserUpdatedAt(timestamp)
+	log.Println(user)
 }
