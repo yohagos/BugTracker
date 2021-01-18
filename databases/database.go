@@ -20,6 +20,9 @@ var (
 	// TicketCollection exported MongoDB Collection
 	TicketCollection *mongo.Collection
 
+	// VerificationCollection exported MongoDB Collection
+	VerificationCollection *mongo.Collection
+
 	mongoClient *mongo.Client
 )
 
@@ -39,6 +42,7 @@ func Init() {
 
 	TicketCollection = mongoClient.Database("bugTracker").Collection("tickets")
 
+	VerificationCollection = mongoClient.Database("bugTracker").Collection("verification")
 }
 
 /* func BsonToMapConvertor(document bson.M) map[string]string {

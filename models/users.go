@@ -14,10 +14,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-/* const (
-	bcryptCost int = 10
-) */
-
 // User struct
 type User struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty"`
