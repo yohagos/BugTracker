@@ -84,7 +84,7 @@ func (verif *UserVerification) SetUserVerificationVerified(bo bool) {
 // CreateVerificationProfile func
 func (verif *UserVerification) CreateVerificationProfile() {
 	ok := databases.CheckVerificationExists(verif.Email)
-	if ok {
+	if !ok {
 		return
 	}
 

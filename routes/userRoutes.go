@@ -27,13 +27,14 @@ func RegistrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	createUser.Password = r.PostForm.Get("password")
 
 	createUser.CreateNewUser() */
+	r.ParseForm()
+
 	key := utils.GenerateVerificationKey()
 	mail := r.PostForm.Get("email")
 	name := r.PostForm.Get("name")
 
 	var verificationUser models.UserVerification
 
-	r.ParseForm()
 	verificationUser.SetUserVerificationName(name)
 	verificationUser.SetUserVerificationLastname(r.PostForm.Get("lastname"))
 	verificationUser.SetUserVerificationPassword(r.PostForm.Get("password"))
@@ -47,8 +48,9 @@ func RegistrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	mails.SendVerificationMail(name, mail, key)
 
 	/* route := "/verfication/" + mail */
+	route := "/verfication/" + mail
 
-	http.Redirect(w, r, "/verfication", 302)
+	http.Redirect(w, r, route, 302)
 }
 
 // LoginGETHandler func

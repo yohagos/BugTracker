@@ -67,7 +67,7 @@ func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 func CheckCurrentSession(r *http.Request) string {
 	session, _ := sessions.Store.Get(r, "session")
 	key := session.Values["username"]
-	if key == "" {
+	if key == "" || key == nil {
 		return ""
 	}
 	exists := models.UserExists(key.(string))

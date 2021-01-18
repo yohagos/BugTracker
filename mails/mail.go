@@ -13,8 +13,8 @@ func test() {
 
 // SendVerificationMail func
 func SendVerificationMail(user, adress, key string) {
-	from := "********"
-	pass := "********"
+	from := "bugtracker2021@gmail.com"
+	pass := "hemsbfi12"
 	to := adress
 
 	msg :=
