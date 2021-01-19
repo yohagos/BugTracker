@@ -100,7 +100,7 @@ func (verif *UserVerification) CreateVerificationProfile() {
 	verificationDocument := bson.D{
 		{Key: "name", Value: verif.GetVerifiedUserName()},
 		{Key: "lastname", Value: verif.GetVerifiedUserLastname()},
-		{Key: "email", Value: verif.GetVerifiedUserEmail},
+		{Key: "email", Value: verif.GetVerifiedUserEmail()},
 		{Key: "password", Value: string(hash)},
 		{Key: "genratedKey", Value: verif.GetVerifiedUserGeneratedKey()},
 		{Key: "verified", Value: verif.GetVerifiedUserVerified()},

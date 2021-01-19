@@ -100,7 +100,7 @@ func (user *User) CreateNewUser() error {
 	} */
 
 	userDocument := bson.D{
-		{Key: "name", Value: user.GetUserName},
+		{Key: "name", Value: user.GetUserName()},
 		{Key: "lastname", Value: user.GetUserLastname()},
 		{Key: "email", Value: user.GetUserEmail()},
 		{Key: "password", Value: user.GetUserPassword()},

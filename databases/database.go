@@ -2,10 +2,12 @@ package databases
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"../utils"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -37,12 +39,11 @@ func Init() {
 	log.Println("Connected to MongoDB!")
 
 	UserCollection = mongoClient.Database("bugTracker").Collection("users")
-
 	BugTypeCollection = mongoClient.Database("bugTracker").Collection("bugtype")
-
 	TicketCollection = mongoClient.Database("bugTracker").Collection("tickets")
-
 	VerificationCollection = mongoClient.Database("bugTracker").Collection("verification")
+
+	/* listDatabases() */
 }
 
 /* func BsonToMapConvertor(document bson.M) map[string]string {
@@ -53,14 +54,15 @@ func Init() {
 	return user
 } */
 
-/* func listDatabases() {
+func listDatabases() {
 	databases, err := mongoClient.ListDatabases(ctx, bson.M{})
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	fmt.Println(databases)
 }
 
+/*
 func quickEntry() {
 	_, err := quickCollection.InsertOne(ctx, bson.D{
 		{Key: "title", Value: "Monkey King"},

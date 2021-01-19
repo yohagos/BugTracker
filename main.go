@@ -3,8 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"./databases"
+	"./mails"
 	"./routes"
 	"./sessions"
 	"./utils"
@@ -13,6 +15,14 @@ import (
 func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
+	mails.SendMail()
+	//mails.SendVerificationMail("Yosie", "bugtracker2021@gmail.com", "abcdef")
+	os.Exit(4)
+
+	/* models.TestCreateUser()
+	models.TestCreateTicket()
+	models.TestCreateNewBugType() */
+	/* os.Exit(3) */
 
 	sessions.SessionInit()
 
