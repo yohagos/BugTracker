@@ -15,7 +15,8 @@ import (
 func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
-	mails.SendMail()
+	mails.SMTPServer("Yosie", "bugtracker2021@gmail.com", "123456")
+	/* mails.SendMail() */
 	//mails.SendVerificationMail("Yosie", "bugtracker2021@gmail.com", "abcdef")
 	os.Exit(4)
 
