@@ -44,8 +44,6 @@ func Init() {
 	BugTypeCollection = mongoClient.Database("bugTracker").Collection("bugtype")
 	TicketCollection = mongoClient.Database("bugTracker").Collection("tickets")
 	VerificationCollection = mongoClient.Database("bugTracker").Collection("verification")
-
-	/* listDatabases() */
 }
 
 /* func BsonToMapConvertor(document bson.M) map[string]string {
