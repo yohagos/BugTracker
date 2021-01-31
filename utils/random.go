@@ -6,30 +6,32 @@ import (
 	"time"
 )
 
+// CHARSET const
+const CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-!?"
+
 // RandomKey func
 func RandomKey() string {
-	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-!?"
-	var length = 30
-	var byteSlice []byte
-	var result string
-	for i := 0; i < length; i++ {
-		random := rand.Intn(len(charset))
-		randomChar := charset[random]
-		byteSlice = append(byteSlice, randomChar)
-	}
-
-	result = string(byteSlice)
-	return result
+	return string(randStringBytes(30))
 }
 
 // RandomFiveDigitNumber func
 func RandomFiveDigitNumber() string {
 	rand.Seed(time.Now().UnixNano())
-
 	min := 10000
 	max := 99999
-
 	randomInt := rand.Intn(max-min) + min
 	return strconv.Itoa(randomInt)
+}
 
+// GenerateVerificationKey func
+func GenerateVerificationKey() string {
+	return string(randStringBytes(6))
+}
+
+func randStringBytes(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = CHARSET[rand.Intn(len(CHARSET))]
+	}
+	return string(b)
 }

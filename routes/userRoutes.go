@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"strings"
 
+	"../appsessions"
+	"../mails"
 	"../models"
-	"../sessions"
 	"../utils"
 	"github.com/gorilla/mux"
 )
@@ -18,16 +19,25 @@ func RegistrationGETHandler(w http.ResponseWriter, r *http.Request) {
 
 // RegistrationPOSTHandler func
 func RegistrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
-	var createUser models.User
 	r.ParseForm()
-	createUser.Name = r.PostForm.Get("name")
-	createUser.Lastname = r.PostForm.Get("lastname")
-	createUser.Email = r.PostForm.Get("email")
-	createUser.Password = r.PostForm.Get("password")
 
-	createUser.CreateNewUser()
+	key := utils.GenerateVerificationKey()
+	mail := r.PostForm.Get("email")
+	name := r.PostForm.Get("name")
 
-	http.Redirect(w, r, "/login", 302)
+	var verificationUser models.UserVerification
+
+	verificationUser.SetUserVerificationName(name)
+	verificationUser.SetUserVerificationLastname(r.PostForm.Get("lastname"))
+	verificationUser.SetUserVerificationPassword(r.PostForm.Get("password"))
+	verificationUser.SetUserVerificationEmail(mail)
+	verificationUser.SetUserVerificationGeneratedKey(key)
+
+	verificationUser.CreateVerificationProfile()
+
+	mails.SendVerificationMail(name, mail, key)
+
+	http.Redirect(w, r, "/verification", 302)
 }
 
 // LoginGETHandler func
@@ -47,9 +57,7 @@ func LoginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 		utils.ExecuteTemplate(w, "login.html", err)
 	}
 
-	session, _ := sessions.Store.Get(r, "session")
-	session.Values["username"] = username
-	session.Save(r, w)
+	SaveCurrentSession(w, r, username)
 
 	redirectString := "/profile/" + username
 
@@ -58,7 +66,7 @@ func LoginPOSTHandler(w http.ResponseWriter, r *http.Request) {
 
 // LogoutGETHandler func
 func LogoutGETHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
+	session, _ := appsessions.Store.Get(r, "session")
 	delete(session.Values, "username")
 	session.Save(r, w)
 	http.Redirect(w, r, "/login", 302)

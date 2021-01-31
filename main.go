@@ -4,9 +4,10 @@ import (
 	"log"
 	"net/http"
 
+	"./appsessions"
 	"./databases"
+	"./mails"
 	"./routes"
-	"./sessions"
 	"./utils"
 )
 
@@ -14,7 +15,9 @@ func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
 
-	sessions.SessionInit()
+	mails.EmailInit()
+
+	appsessions.SessionInit()
 
 	log.Println("Loading Templates..")
 	utils.LoadTemplate("./templates/*.html")

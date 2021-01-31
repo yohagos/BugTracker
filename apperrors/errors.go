@@ -31,6 +31,9 @@ var (
 
 	// ErrorTicketAlreadyExits error
 	ErrorTicketAlreadyExits = errors.New("Ticket already exits")
+
+	// ErrorVerificationKeyInvalid error
+	ErrorVerificationKeyInvalid = errors.New("Verification Key does not exist")
 )
 
 // InternalServerError func

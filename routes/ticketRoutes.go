@@ -5,12 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gorilla/mux"
-
 	"../apperrors"
 	"../models"
-	"../sessions"
 	"../utils"
+	"github.com/gorilla/mux"
 )
 
 // TicketsGETHandler func
@@ -47,9 +45,7 @@ func TicketsPOSTHandler(w http.ResponseWriter, r *http.Request) {
 
 		ticket.CreateNewTicket()
 
-		session, _ := sessions.Store.Get(r, "session")
-		session.Values["username"] = sessionKey
-		session.Save(r, w)
+		SaveCurrentSession(w, r, sessionKey)
 
 		redirect := "/profile/" + sessionKey
 
