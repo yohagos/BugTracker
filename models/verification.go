@@ -5,6 +5,7 @@ import (
 
 	"../databases"
 	"../utils"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
@@ -110,13 +111,8 @@ func (verif *UserVerification) CreateVerificationProfile() {
 }
 
 // CheckVerification func
-func CheckVerification(mail, key string) bool {
-	genKey := databases.GetVerificationKey(mail)
-
-	if key == genKey {
-		return true
-	}
-	return false
+func CheckVerification(key string) (string, bool) {
+	return databases.GetVerificationKey(key)
 }
 
 // CreateNewUser func
@@ -128,5 +124,6 @@ func CreateNewUser(mail string) {
 	timestamp := utils.CreateTimeStamp()
 	user.setUserCreatedAt(timestamp)
 	user.setUserUpdatedAt(timestamp)
+	user.CreateNewUser()
 	log.Println(user)
 }

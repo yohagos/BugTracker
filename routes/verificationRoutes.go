@@ -1,12 +1,11 @@
 package routes
 
 import (
-	"errors"
 	"net/http"
 
+	"../apperrors"
 	"../models"
 	"../utils"
-	"github.com/gorilla/mux"
 )
 
 // VerificationGETHandler func
@@ -16,23 +15,18 @@ func VerificationGETHandler(w http.ResponseWriter, r *http.Request) {
 
 // VerificationPOSTHandler func
 func VerificationPOSTHandler(w http.ResponseWriter, r *http.Request) {
-	user := mux.Vars(r)["user"]
 	r.ParseForm()
-	input := r.PostForm.Get("verification")
+	key := r.PostForm.Get("verification")
 
-	if r.Method == http.MethodPost {
-		bo := models.CheckVerification(user, input)
-
-		if !bo {
-			utils.ExecuteTemplate(w, "verfication.html", struct {
-				Error error
-			}{
-				Error: errors.New("Wrong key - please try again"),
-			})
-		}
-
-		models.CreateNewUser(user)
+	mail, ok := models.CheckVerification(key)
+	if !ok {
+		utils.ExecuteTemplate(w, "verification.html", struct {
+			Error error
+		}{
+			Error: apperrors.ErrorVerificationKeyInvalid,
+		})
 	}
-	http.Redirect(w, r, "/login", 302)
 
+	models.CreateNewUser(mail)
+	http.Redirect(w, r, "/login", 302)
 }

@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"../apperrors"
+	"../appsessions"
 	"../middleware"
 	"../models"
-	"../sessions"
 	"../utils"
 
 	"github.com/gorilla/mux"
@@ -26,7 +26,7 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/bugtype/create", BugtypeGETHandler).Methods("GET")
 	router.HandleFunc("/ticket/create", TicketsGETHandler).Methods("GET")
 	router.HandleFunc("/logout", LogoutGETHandler).Methods("GET")
-	router.HandleFunc("/verification/{user}", VerificationGETHandler).Methods("GET")
+	router.HandleFunc("/verification", VerificationGETHandler).Methods("GET")
 	router.HandleFunc("/profile/{user}", middleware.AuthRequired(ProfileGETHandler)).Methods("GET")
 	router.HandleFunc("/ticket/details/{id}", middleware.AuthRequired(TicketDetailGETHandler)).Methods("GET")
 
@@ -34,7 +34,7 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/registration", RegistrationPOSTHandler).Methods("POST")
 	router.HandleFunc("/bugtype/create", BugtypePOSTHandler).Methods("POST")
 	router.HandleFunc("/ticket/create", TicketsPOSTHandler).Methods("POST")
-	router.HandleFunc("/verfication", VerificationPOSTHandler).Methods("POST")
+	router.HandleFunc("/verification", VerificationPOSTHandler).Methods("POST")
 
 	fs := http.FileServer(http.Dir("static/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
@@ -65,7 +65,7 @@ func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 
 // CheckCurrentSession func
 func CheckCurrentSession(r *http.Request) string {
-	session, _ := sessions.Store.Get(r, "session")
+	session, _ := appsessions.Store.Get(r, "session")
 	key := session.Values["username"]
 	if key == "" || key == nil {
 		return ""
@@ -79,7 +79,7 @@ func CheckCurrentSession(r *http.Request) string {
 
 // SaveCurrentSession func
 func SaveCurrentSession(w http.ResponseWriter, r *http.Request, key string) error {
-	session, _ := sessions.Store.Get(r, "session")
+	session, _ := appsessions.Store.Get(r, "session")
 	session.Values["username"] = key
 	err := session.Save(r, w)
 	if err != nil {

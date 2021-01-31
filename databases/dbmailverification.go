@@ -1,6 +1,7 @@
 package databases
 
 import (
+	"fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -23,12 +24,21 @@ func CreateNewVerificationProfile(profile bson.D) {
 }
 
 // GetVerificationKey func
-func GetVerificationKey(mail string) string {
+func GetVerificationKey(key string) (string, bool) {
 	var document bson.M
-	if err := VerificationCollection.FindOne(ctx, bson.M{"mail": mail}).Decode(&document); err != nil {
-		log.Println(err)
+	if err := VerificationCollection.FindOne(ctx, bson.M{"genratedKey": key}).Decode(&document); err != nil {
+		return "", false
 	}
-	var key string
+	mail := ""
+	for k, v := range document {
+		if k == "email" {
+			mail = fmt.Sprintf("%v", v)
+			break
+		}
+	}
+
+	return mail, true
+	/* var key string
 	for k, v := range document {
 		if k == "generatedKey" {
 			key = v.(string)
@@ -36,7 +46,7 @@ func GetVerificationKey(mail string) string {
 		}
 	}
 
-	return key
+	return key */
 }
 
 // DeleteVerificationDocument func

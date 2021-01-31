@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"../utils"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -32,10 +30,14 @@ var (
 func Init() {
 	ClientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	mongoClient, err := mongo.Connect(ctx, ClientOptions)
-	utils.IsError(err)
+	if err != nil {
+		log.Println(err)
+	}
 
 	err = mongoClient.Ping(context.TODO(), nil)
-	utils.IsError(err)
+	if err != nil {
+		log.Println(err)
+	}
 	log.Println("Connected to MongoDB!")
 
 	UserCollection = mongoClient.Database("bugTracker").Collection("users")

@@ -3,29 +3,21 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 
+	"./appsessions"
 	"./databases"
 	"./mails"
 	"./routes"
-	"./sessions"
 	"./utils"
 )
 
 func main() {
 	log.Println("Initilate Database..")
 	databases.Init()
-	mails.SMTPServer("Yosie", "bugtracker2021@gmail.com", "123456")
-	/* mails.SendMail() */
-	//mails.SendVerificationMail("Yosie", "bugtracker2021@gmail.com", "abcdef")
-	os.Exit(4)
 
-	/* models.TestCreateUser()
-	models.TestCreateTicket()
-	models.TestCreateNewBugType() */
-	/* os.Exit(3) */
+	mails.EmailInit()
 
-	sessions.SessionInit()
+	appsessions.SessionInit()
 
 	log.Println("Loading Templates..")
 	utils.LoadTemplate("./templates/*.html")

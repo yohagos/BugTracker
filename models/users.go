@@ -91,14 +91,6 @@ func (user *User) CreateNewUser() error {
 		return apperrors.ErrorUserAlreadyExists
 	}
 
-	/* pwd := user.GetUserPassword()
-	cost := bcrypt.DefaultCost
-	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost) */
-
-	/* if err != nil {
-		return err
-	} */
-
 	userDocument := bson.D{
 		{Key: "name", Value: user.GetUserName()},
 		{Key: "lastname", Value: user.GetUserLastname()},
