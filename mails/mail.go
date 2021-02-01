@@ -21,7 +21,9 @@ func EmailInit() {
 	bugtrackerEmail = os.Getenv("BUGTRACKER_EMAIL")
 	bugtrackerPw = os.Getenv("BUGTRACKER_PW")
 	if bugtrackerEmail == "" || bugtrackerPw == "" {
+		log.Printf("%T, %v\n", bugtrackerEmail, bugtrackerEmail)
 		log.Fatalln("BugTracker Email credentials empty - Please check your Environment Variables")
+
 	}
 }
 

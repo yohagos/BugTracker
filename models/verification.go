@@ -1,8 +1,6 @@
 package models
 
 import (
-	"log"
-
 	"../databases"
 	"../utils"
 
@@ -125,5 +123,5 @@ func CreateNewUser(mail string) {
 	user.setUserCreatedAt(timestamp)
 	user.setUserUpdatedAt(timestamp)
 	user.CreateNewUser()
-	log.Println(user)
+
 }

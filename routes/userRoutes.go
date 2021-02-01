@@ -33,9 +33,9 @@ func RegistrationPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	verificationUser.SetUserVerificationEmail(mail)
 	verificationUser.SetUserVerificationGeneratedKey(key)
 
-	verificationUser.CreateVerificationProfile()
+	go verificationUser.CreateVerificationProfile()
 
-	mails.SendVerificationMail(name, mail, key)
+	go mails.SendVerificationMail(name, mail, key)
 
 	http.Redirect(w, r, "/verification", 302)
 }
@@ -95,11 +95,18 @@ func ProfileGETHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
+	displayTickets := false
+	if len(*ticketsList) > 0 {
+		displayTickets = true
+	}
+
 	utils.ExecuteTemplate(w, "profile.html", struct {
-		User    *models.User
-		Tickets *[]models.Tickets
+		User           *models.User
+		Tickets        *[]models.Tickets
+		DisplayTickets bool
 	}{
-		User:    user,
-		Tickets: ticketsList,
+		User:           user,
+		Tickets:        ticketsList,
+		DisplayTickets: displayTickets,
 	})
 }
