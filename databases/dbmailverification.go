@@ -51,7 +51,7 @@ func GetVerificationKey(key string) (string, bool) {
 
 // DeleteVerificationDocument func
 func DeleteVerificationDocument(mail string) {
-	_, err := VerificationCollection.DeleteOne(ctx, bson.M{"mail": mail})
+	_, err := VerificationCollection.DeleteOne(ctx, bson.M{"email": mail})
 	if err != nil {
 		log.Println(err)
 	}

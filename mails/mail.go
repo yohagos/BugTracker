@@ -2,6 +2,7 @@ package mails
 
 import (
 	"crypto/tls"
+	"log"
 	"os"
 
 	"gopkg.in/gomail.v2"
@@ -19,6 +20,9 @@ var (
 func EmailInit() {
 	bugtrackerEmail = os.Getenv("BUGTRACKER_EMAIL")
 	bugtrackerPw = os.Getenv("BUGTRACKER_PW")
+	if bugtrackerEmail == "" || bugtrackerPw == "" {
+		log.Fatalln("BugTracker Email credentials empty - Please check your Environment Variables")
+	}
 }
 
 // SendVerificationMail func
