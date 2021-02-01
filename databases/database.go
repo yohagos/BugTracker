@@ -23,6 +23,8 @@ var (
 	// VerificationCollection exported MongoDB Collection
 	VerificationCollection *mongo.Collection
 
+	quickCollection *mongo.Collection
+
 	mongoClient *mongo.Client
 )
 
@@ -45,7 +47,9 @@ func Init() {
 	TicketCollection = mongoClient.Database("bugTracker").Collection("tickets")
 	VerificationCollection = mongoClient.Database("bugTracker").Collection("verification")
 
-	/* listDatabases() */
+	/* quickCollection = mongoClient.Database("test").Collection("quick")
+	//quickEntry()
+	deletingSingleDocument() */
 }
 
 /* func BsonToMapConvertor(document bson.M) map[string]string {
@@ -64,16 +68,39 @@ func listDatabases() {
 	fmt.Println(databases)
 }
 
-/*
 func quickEntry() {
-	_, err := quickCollection.InsertOne(ctx, bson.D{
-		{Key: "title", Value: "Monkey King"},
-		{Key: "author", Value: "Benjamin"},
+	_, err := quickCollection.InsertMany(ctx, []interface{}{
+		bson.D{
+			{Key: "title", Value: "Supernatural"},
+			{Key: "author", Value: "Dean"},
+			{Key: "description", Value: "Bro's kämpfen gegen Dämonen, Engel, mystische  Wesen und Gott"},
+			{Key: "duration", Value: 250},
+		},
+		bson.D{
+			{Key: "title", Value: "The Flash"},
+			{Key: "author", Value: "Barry"},
+			{Key: "description", Value: "The fastest Man alive..."},
+			{Key: "duration", Value: 200},
+		},
+		bson.D{
+			{Key: "title", Value: "Arrow"},
+			{Key: "author", Value: "Oliver"},
+			{Key: "description", Value: "Next Ras Al Ghul"},
+			{Key: "duration", Value: 300},
+		},
 	})
 	if err != nil {
 		log.Fatalln(err)
 	}
-} */
+}
+
+func deletingSingleDocument() {
+	_, err := quickCollection.DeleteOne(ctx, bson.M{"title": "Arrow"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	//fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
+}
 
 /* func TestBsonToMap() {
 	var b bson.M
