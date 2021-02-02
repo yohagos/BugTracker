@@ -8,7 +8,6 @@ import (
 
 	"../apperrors"
 	"../databases"
-	"../utils"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -26,8 +25,8 @@ type User struct {
 }
 
 // GetUserID func
-func (user *User) GetUserID() string {
-	return user.ID.String()
+func (user *User) GetUserID() primitive.ObjectID {
+	return user.ID
 }
 
 // GetUserName func
@@ -129,7 +128,7 @@ func UserGetAllInformations(username string) (*User, error) {
 	return user, nil
 }
 
-// TestCreateUser func
+/* // TestCreateUser func
 func TestCreateUser() {
 	pwd := "123456"
 	cost := bcrypt.DefaultCost
@@ -151,7 +150,7 @@ func TestCreateUser() {
 		{Key: "updatedAt", Value: timestamp},
 	}
 	databases.CreateNewUser(userDocument)
-}
+} */
 
 // BsonToUser func
 func BsonToUser(list bson.M) *User {

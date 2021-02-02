@@ -20,9 +20,16 @@ type Tickets struct {
 	Status    string             `bson:"status,omitempty"`
 	CreatedAt string             `bson:"createdAt,omitempty"`
 	UpdatedAt string             `bson:"updatedAt,omitempty"`
+	TComments []TicketComments   `bson:ticketComments,omitempty`
 }
 
-// TestCreateTicket func
+// TicketComments struct
+type TicketComments struct {
+	UserID  primitive.ObjectID `bson:"userID,omitempty"`
+	Comment string             `bson:"comment,omitempty"`
+}
+
+/* // TestCreateTicket func
 func TestCreateTicket() {
 	timestamp := utils.CreateTimeStamp()
 	ticketDocument := bson.D{
@@ -33,13 +40,12 @@ func TestCreateTicket() {
 		{Key: "createdAt", Value: timestamp},
 		{Key: "updatedAt", Value: timestamp},
 	}
-
 	databases.CreateNewTicket(ticketDocument)
-}
+} */
 
 // GetTicketID func
-func (ticket *Tickets) GetTicketID() string {
-	return ticket.ID.String()
+func (ticket *Tickets) GetTicketID() primitive.ObjectID {
+	return ticket.ID
 }
 
 // GetTicketName func
@@ -70,6 +76,11 @@ func (ticket *Tickets) GetTicketUpdatedAt() string {
 // GetTicketCreatedAt func
 func (ticket *Tickets) GetTicketCreatedAt() string {
 	return ticket.CreatedAt
+}
+
+// GetTicketComments func
+func (ticket *Tickets) GetTicketComments() []TicketComments {
+	return ticket.TComments
 }
 
 // SetTicketName func

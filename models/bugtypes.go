@@ -28,8 +28,8 @@ type BugTypes struct {
 }
 
 // GetBugTypeID method
-func (bugtype *BugTypes) GetBugTypeID() string {
-	return bugtype.ID.String()
+func (bugtype *BugTypes) GetBugTypeID() primitive.ObjectID {
+	return bugtype.ID
 }
 
 // GetBugTypeDescription method
@@ -102,7 +102,7 @@ func BugTypeExists(acronym string) bool {
 	return databases.CheckBugTypeExists(acronym)
 }
 
-// TestCreateNewBugType func
+/* // TestCreateNewBugType func
 func TestCreateNewBugType() {
 	time := utils.CreateTimeStamp()
 	bugTypeDocument := bson.D{
@@ -113,7 +113,7 @@ func TestCreateNewBugType() {
 		{Key: "updatedAt", Value: time},
 	}
 	databases.CreateNewBugType(bugTypeDocument)
-}
+} */
 
 // NewBugTypeExists method
 func NewBugTypeExists(acronym string) error {

@@ -20,6 +20,11 @@ type UserVerification struct {
 	Verified     bool               `bson:"verified,omitempty"`
 }
 
+// GetVerificationID func
+func (verif *UserVerification) GetVerificationID() primitive.ObjectID {
+	return verif.ID
+}
+
 // GetVerifiedUserName func
 func (verif *UserVerification) GetVerifiedUserName() string {
 	return verif.Name

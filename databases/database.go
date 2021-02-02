@@ -2,10 +2,11 @@ package databases
 
 import (
 	"context"
-	"fmt"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -48,27 +49,11 @@ func Init() {
 	VerificationCollection = mongoClient.Database("bugTracker").Collection("verification")
 
 	/* quickCollection = mongoClient.Database("test").Collection("quick")
-	//quickEntry()
-	deletingSingleDocument() */
+	//quickEntriesMany()
+	findAny() */
 }
 
-/* func BsonToMapConvertor(document bson.M) map[string]string {
-	var user map[string]string
-	for _, v := range document {
-		user = append(v, user)
-	}
-	return user
-} */
-
-func listDatabases() {
-	databases, err := mongoClient.ListDatabases(ctx, bson.M{})
-	if err != nil {
-		log.Println(err)
-	}
-	fmt.Println(databases)
-}
-
-func quickEntry() {
+func quickEntriesMany() {
 	_, err := quickCollection.InsertMany(ctx, []interface{}{
 		bson.D{
 			{Key: "title", Value: "Supernatural"},
@@ -94,13 +79,76 @@ func quickEntry() {
 	}
 }
 
-func deletingSingleDocument() {
+func findAny() {
+	cursor, err := quickCollection.Find(ctx, bson.M{})
+	if err != nil {
+		log.Println(err)
+	}
+	var result []bson.M
+	if err := cursor.All(ctx, &result); err != nil {
+		log.Println(err)
+		os.Exit(3)
+	}
+	var test primitive.ObjectID
+	for _, v := range result {
+		for key, values := range v {
+			if key == "_id" {
+				test = values.(primitive.ObjectID)
+				log.Println(test.Hex())
+			}
+		}
+	}
+}
+
+/* func BsonToMapConvertor(document bson.M) map[string]string {
+	var user map[string]string
+	for _, v := range document {
+		user = append(v, user)
+	}
+	return user
+} */
+/*
+func listDatabases() {
+	databases, err := mongoClient.ListDatabases(ctx, bson.M{})
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(databases)
+} */
+
+/* func quickEntry() {
+	_, err := quickCollection.InsertMany(ctx, []interface{}{
+		bson.D{
+			{Key: "title", Value: "Supernatural"},
+			{Key: "author", Value: "Dean"},
+			{Key: "description", Value: "Bro's kämpfen gegen Dämonen, Engel, mystische  Wesen und Gott"},
+			{Key: "duration", Value: 250},
+		},
+		bson.D{
+			{Key: "title", Value: "The Flash"},
+			{Key: "author", Value: "Barry"},
+			{Key: "description", Value: "The fastest Man alive..."},
+			{Key: "duration", Value: 200},
+		},
+		bson.D{
+			{Key: "title", Value: "Arrow"},
+			{Key: "author", Value: "Oliver"},
+			{Key: "description", Value: "Next Ras Al Ghul"},
+			{Key: "duration", Value: 300},
+		},
+	})
+	if err != nil {
+		log.Fatalln(err)
+	}
+} */
+
+/* func deletingSingleDocument() {
 	_, err := quickCollection.DeleteOne(ctx, bson.M{"title": "Arrow"})
 	if err != nil {
 		log.Fatal(err)
 	}
 	//fmt.Printf("DeleteOne removed %v documents\n", result.DeletedCount)
-}
+} */
 
 /* func TestBsonToMap() {
 	var b bson.M

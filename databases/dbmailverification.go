@@ -38,15 +38,6 @@ func GetVerificationKey(key string) (string, bool) {
 	}
 
 	return mail, true
-	/* var key string
-	for k, v := range document {
-		if k == "generatedKey" {
-			key = v.(string)
-			break
-		}
-	}
-
-	return key */
 }
 
 // DeleteVerificationDocument func
