@@ -102,19 +102,6 @@ func BugTypeExists(acronym string) bool {
 	return databases.CheckBugTypeExists(acronym)
 }
 
-/* // TestCreateNewBugType func
-func TestCreateNewBugType() {
-	time := utils.CreateTimeStamp()
-	bugTypeDocument := bson.D{
-		{Key: "description", Value: "Bugs were found which should be fixed before the next release."},
-		{Key: "acronym", Value: "BUG"},
-		{Key: "name", Value: "Bugs"},
-		{Key: "createdAt", Value: time},
-		{Key: "updatedAt", Value: time},
-	}
-	databases.CreateNewBugType(bugTypeDocument)
-} */
-
 // NewBugTypeExists method
 func NewBugTypeExists(acronym string) error {
 	if err := databases.BugTypeCollection.FindOne(ctx, bson.M{"acronym": acronym}); err != nil {

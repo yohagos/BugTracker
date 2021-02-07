@@ -102,6 +102,7 @@ func (verif *UserVerification) CreateVerificationProfile() {
 
 	/* time := utils.CreateTimeStamp() */
 	verificationDocument := bson.D{
+		{Key: "_id", Value: primitive.NewObjectID()},
 		{Key: "name", Value: verif.GetVerifiedUserName()},
 		{Key: "lastname", Value: verif.GetVerifiedUserLastname()},
 		{Key: "email", Value: verif.GetVerifiedUserEmail()},

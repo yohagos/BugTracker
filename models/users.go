@@ -59,6 +59,10 @@ func (user *User) GetUserUpdatedAt() string {
 	return user.UpdatedAt
 }
 
+func (user *User) setUserID(id primitive.ObjectID) {
+	user.ID = id
+}
+
 func (user *User) setUserEmail(str string) {
 	user.Email = str
 }
@@ -91,6 +95,7 @@ func (user *User) CreateNewUser() error {
 	}
 
 	userDocument := bson.D{
+		{Key: "_id", Value: primitive.NewObjectID()},
 		{Key: "name", Value: user.GetUserName()},
 		{Key: "lastname", Value: user.GetUserLastname()},
 		{Key: "email", Value: user.GetUserEmail()},
@@ -128,36 +133,15 @@ func UserGetAllInformations(username string) (*User, error) {
 	return user, nil
 }
 
-/* // TestCreateUser func
-func TestCreateUser() {
-	pwd := "123456"
-	cost := bcrypt.DefaultCost
-	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), cost)
-
-	if err != nil {
-		return
-	}
-
-	newPwd := string(hash)
-
-	timestamp := utils.CreateTimeStamp()
-	userDocument := bson.D{
-		{Key: "name", Value: "Yosef"},
-		{Key: "lastname", Value: "Hagos"},
-		{Key: "email", Value: "test@test.com"},
-		{Key: "password", Value: newPwd},
-		{Key: "createdAt", Value: timestamp},
-		{Key: "updatedAt", Value: timestamp},
-	}
-	databases.CreateNewUser(userDocument)
-} */
-
 // BsonToUser func
 func BsonToUser(list bson.M) *User {
 	var user User
 
 	for k, v := range list {
 		switch k {
+		case "_id":
+			key, _ := primitive.ObjectIDFromHex(fmt.Sprintf("%v", v))
+			user.setUserID(key)
 		case "name":
 			key := fmt.Sprintf("%v", v)
 			user.setUserName(key)

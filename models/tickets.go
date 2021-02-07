@@ -20,7 +20,7 @@ type Tickets struct {
 	Status    string             `bson:"status,omitempty"`
 	CreatedAt string             `bson:"createdAt,omitempty"`
 	UpdatedAt string             `bson:"updatedAt,omitempty"`
-	TComments []TicketComments   `bson:ticketComments,omitempty`
+	Comments  []TicketComments   `bson:"comments,omitempty"`
 }
 
 // TicketComments struct
@@ -28,20 +28,6 @@ type TicketComments struct {
 	UserID  primitive.ObjectID `bson:"userID,omitempty"`
 	Comment string             `bson:"comment,omitempty"`
 }
-
-/* // TestCreateTicket func
-func TestCreateTicket() {
-	timestamp := utils.CreateTimeStamp()
-	ticketDocument := bson.D{
-		{Key: "name", Value: "test-12345"},
-		{Key: "createdby", Value: "test01"},
-		{Key: "bugtype", Value: "bug"},
-		{Key: "status", Value: "testing"},
-		{Key: "createdAt", Value: timestamp},
-		{Key: "updatedAt", Value: timestamp},
-	}
-	databases.CreateNewTicket(ticketDocument)
-} */
 
 // GetTicketID func
 func (ticket *Tickets) GetTicketID() primitive.ObjectID {
@@ -80,7 +66,12 @@ func (ticket *Tickets) GetTicketCreatedAt() string {
 
 // GetTicketComments func
 func (ticket *Tickets) GetTicketComments() []TicketComments {
-	return ticket.TComments
+	return ticket.Comments
+}
+
+// SetTicketID func
+func (ticket *Tickets) SetTicketID(tic primitive.ObjectID) {
+	ticket.ID = tic
 }
 
 // SetTicketName func
@@ -113,6 +104,11 @@ func (ticket *Tickets) SetTicketCreatedAt(tic string) {
 	ticket.CreatedAt = tic
 }
 
+// SetTicketComments func
+func (ticket *Tickets) SetTicketComments(tic []TicketComments) {
+	ticket.Comments = tic
+}
+
 // CreateNewTicket func
 func (ticket *Tickets) CreateNewTicket() {
 	newname := ticket.GetTicketBugType() + "-" + utils.RandomFiveDigitNumber()
@@ -121,9 +117,9 @@ func (ticket *Tickets) CreateNewTicket() {
 		log.Println("Ticket already exists")
 		return
 	}
-	/* num := utils.RandomFiveDigitNumber() */
 	timeStamp := utils.CreateTimeStamp()
 	ticketDocument := bson.D{
+		{Key: "_id", Value: primitive.NewObjectID()},
 		{Key: "name", Value: newname},
 		{Key: "createdby", Value: ticket.GetTicketCreatedBy()},
 		{Key: "bugtype", Value: ticket.GetTicketBugType()},

@@ -2,6 +2,7 @@ package databases
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -48,9 +49,10 @@ func Init() {
 	TicketCollection = mongoClient.Database("bugTracker").Collection("tickets")
 	VerificationCollection = mongoClient.Database("bugTracker").Collection("verification")
 
-	/* quickCollection = mongoClient.Database("test").Collection("quick")
+	//quickCollection = mongoClient.Database("test").Collection("quick")
 	//quickEntriesMany()
-	findAny() */
+	//readOneDocument()
+	//findAny()
 }
 
 func quickEntriesMany() {
@@ -98,6 +100,15 @@ func findAny() {
 			}
 		}
 	}
+}
+
+func readOneDocument() {
+	id, _ := primitive.ObjectIDFromHex("601f96c1c50d77a682b28aee")
+	var document bson.M
+	if err := quickCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&document); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(document)
 }
 
 /* func BsonToMapConvertor(document bson.M) map[string]string {
